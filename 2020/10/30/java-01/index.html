@@ -12,14 +12,13 @@
 
 
 
-    <meta name="description" content="Java简介Java 8的后续版本都是非长期支持版本，之前都是长期支持版本（以年为单位）.
-Jdk和JreJdk是java开发工具包，包括编译器，jre，jvm等
+    <meta name="description" content="Java简介Java 8的后续版本都是非长期支持版本，之前都是长期支持版本（以年为单位）。
+Jdk和JreJdk是java开发工具包，包括编译器，jre，jvm等。
 Java执行过程
 
+Hotspot JVMJvm判定热点方法的两种方式
 
-Create a new post1$ hexo new "My New Post"
-
-More info:..."/>
+基于采样热点的判断周期性检查线程栈顶，经常出现的是热点..."/>
 
 
 <meta name="Robots" content="all">
@@ -89,23 +88,75 @@ More info:..."/>
     </div>
 
     <div class="post-content">
-        <h2 id="Java简介"><a href="#Java简介" class="headerlink" title="Java简介"></a>Java简介</h2><p>Java 8的后续版本都是非长期支持版本，之前都是长期支持版本（以年为单位）.</p>
-<h2 id="Jdk和Jre"><a href="#Jdk和Jre" class="headerlink" title="Jdk和Jre"></a>Jdk和Jre</h2><p>Jdk是java开发工具包，包括编译器，jre，jvm等</p>
-<h2 id="Java执行过程"><a href="#Java执行过程" class="headerlink" title="Java执行过程"></a>Java执行过程</h2><img src="/2020/10/30/java-01/01.png" width="70%" height="70%">
-<script type="text/javascript" src="/"></script>
+        <h2 id="Java简介"><a href="#Java简介" class="headerlink" title="Java简介"></a>Java简介</h2><p>Java 8的后续版本都是非长期支持版本，之前都是长期支持版本（以年为单位）。</p>
+<h2 id="Jdk和Jre"><a href="#Jdk和Jre" class="headerlink" title="Jdk和Jre"></a>Jdk和Jre</h2><p>Jdk是java开发工具包，包括编译器，jre，jvm等。</p>
+<h2 id="Java执行过程"><a href="#Java执行过程" class="headerlink" title="Java执行过程"></a>Java执行过程</h2><img src="/2020/10/30/java-01/01.png" class="img-stand">
 
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<h2 id="Hotspot-JVM"><a href="#Hotspot-JVM" class="headerlink" title="Hotspot JVM"></a>Hotspot JVM</h2><p>Jvm判定热点方法的两种方式</p>
+<ul>
+<li><h3 id="基于采样热点的判断"><a href="#基于采样热点的判断" class="headerlink" title="基于采样热点的判断"></a>基于采样热点的判断</h3><p>周期性检查线程栈顶，经常出现的是热点方法，实现简单但精度低，易受线程阻塞影响。</p>
+</li>
+<li><h3 id="基于计数器热点的判断"><a href="#基于计数器热点的判断" class="headerlink" title="基于计数器热点的判断"></a>基于计数器热点的判断</h3><p>虚拟机给每个方法甚至代码块建立一个计数器（方法调用计数器和回边计数器），统计执行次数，超过设定阈值为热点方法。</p>
+</li>
+</ul>
+<h2 id="Java语言的特点"><a href="#Java语言的特点" class="headerlink" title="Java语言的特点"></a>Java语言的特点</h2><ul>
+<li>面向对象，容易理解，开发简单</li>
+<li>跨平台，可运行在不同类型的服务器上</li>
+<li>执行性能好，运行效率高</li>
+<li>提供大量API扩展</li>
+<li>多线程支持，增加响应和实时交互能力</li>
+<li>安全性好，自带验证机制，确保程序的可靠性和安全性</li>
+</ul>
+<h2 id="Jvm跨平台原理"><a href="#Jvm跨平台原理" class="headerlink" title="Jvm跨平台原理"></a>Jvm跨平台原理</h2><p>每个类型的操作系统都能运行一个Jvm，Java只需生成Jvm可以执行的代码即可，Jvm底层屏蔽了不同类型服务器的差异。</p>
+<h2 id="Jdk，Jre，Jvm的区别与联系"><a href="#Jdk，Jre，Jvm的区别与联系" class="headerlink" title="Jdk，Jre，Jvm的区别与联系"></a>Jdk，Jre，Jvm的区别与联系</h2><ul>
+<li>Jdk：包括Java的开发和运行环境（Jre）</li>
+<li>Jre： 为Java运行的最小单元</li>
+<li>Jvm：Java运行载体</li>
+</ul>
+<h2 id="Java获取明天此刻时间"><a href="#Java获取明天此刻时间" class="headerlink" title="Java获取明天此刻时间"></a>Java获取明天此刻时间</h2><ul>
+<li><h4 id="Jdk8之前"><a href="#Jdk8之前" class="headerlink" title="Jdk8之前"></a>Jdk8之前</h4><pre><code>Calendar calendar = Calendar.getInstance();
+calendar.add(Calendar.DATE, 1);
+System.out.println(calendar.getTime());</code></pre></li>
+<li><h4 id="Jdk8"><a href="#Jdk8" class="headerlink" title="Jdk8"></a>Jdk8</h4><pre><code>LocalDateTime today = LocalDateTime.now();
+LocalDateTime tomorrow = today.plusDays(1);
+System.out.println(tomorrow);
+---------------------------------------------
+LocalDateTime today = LocalDateTime.now();
+LocalDateTime tomorrow = today.minusDays(-1);
+System.out.println(tomorrow);</code></pre></li>
+</ul>
+<h2 id="Java中跳出多重循环嵌套"><a href="#Java中跳出多重循环嵌套" class="headerlink" title="Java中跳出多重循环嵌套"></a>Java中跳出多重循环嵌套</h2><ul>
+<li><h4 id="break标签"><a href="#break标签" class="headerlink" title="break标签"></a>break标签</h4><pre><code>myfor:for (int i = 0; i &lt; 100; i++) {
+    for (int j = 0; j &lt; 100; j++) {
+        System.out.println(&quot;J:&quot; + j);
+        if (j == 10) {
+            // 跳出多重循环
+            break myfor;
+        }
+    }
+}</code></pre></li>
+<li><h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><pre><code>boolean flag = true;
+for (int i = 0; i &lt; 100 &amp;&amp; flag; i++) {
+    for (int j = 0; j &lt; 100; j++) {
+        System.out.println(&quot;J:&quot; + j);
+        if (j == 10) {
+            // 跳出多重循环
+            flag = false;
+            break;
+        }
+    }
+}</code></pre></li>
+</ul>
+<h2 id="Java中的内存泄漏"><a href="#Java中的内存泄漏" class="headerlink" title="Java中的内存泄漏"></a>Java中的内存泄漏</h2><ul>
+<li><p>长生命周期对象持有短生命的引用，比如，缓存系统，我们加载了一个对象放在缓存中，然后一直不使用这个缓存，由于缓存的对象一直被缓存引用得不到释放，就造成了内存泄漏；</p>
+</li>
+<li><p>各种连接未调用关闭方法，比如，数据库 Connection 连接，未显性地关闭，就会造成内存泄漏；</p>
+</li>
+<li><p>内部类持有外部类，如果一个外部类的实例对象的方法返回了一个内部类的实例对象，这个内部类对象被长期引用了，即使那个外部类实例对象不再被使用，但由于内部类持有外部类的实例对象，这个外部类对象将不会被垃圾回收，这也会造成内存泄露；</p>
+</li>
+<li><p>改变哈希值，当一个对象被存储进 HashSet 集合中以后，就不能修改这个对象中的那些参与计算哈希值的字段了，否则对象修改后的哈希值与最初存储进 HashSet 集合中时的哈希值就不同了，在这种情况下，即使在 contains 方法使用该对象的当前引用作为的参数去 HashSet 集合中检索对象，也将返回找不到对象的结果，这也会导致无法从 HashSet 集合中单独删除当前对象，造成内存泄露。</p>
+</li>
+</ul>
 
     </div>
 </article>
@@ -128,11 +179,35 @@ More info:..."/>
     <ul class="item-box">
         
             
-                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
+                <li><a href="/2020/11/02/java-09/">java-09</a></li>
             
         
             
-                <li><a href="/2020/06/05/hello-world/">Hello World</a></li>
+                <li><a href="/2020/11/02/java-08/">java-08</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-07/">java-07</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-06/">java-06</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-05/">java-05</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-04/">java-04</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-03/">java-03</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-02/">java-02</a></li>
             
         
     </ul>
@@ -144,7 +219,7 @@ More info:..."/>
         
   <div class="box widget">
     <div class="title">Archives</div>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
   </div>
 
     

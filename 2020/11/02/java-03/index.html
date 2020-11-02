@@ -18,7 +18,7 @@
 <meta name="Robots" content="all">
 
 
-    <title>Hexo</title>
+    <title>Hexo | java-03</title>
 
 
 <link rel="icon" href="/images/harry.ico">
@@ -71,102 +71,20 @@
 
         <section class="content global-width">
             <div class="main">
-                
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/10/30/java-01/">Java执行</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-10-30</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
+                <article class="box post">
+    <div class="post-title align-center detail-title">java-03</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-02</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
 
-            <div class="post-excerpt">
-                <a href="/2020/10/30/java-01/">
-                    <p>
-                        
-                            Java简介Java 8的后续版本都是非长期支持版本，之前都是长期支持版本（以年为单位）。
-Jdk和JreJdk是java开发工具包，包括编译器，jre，jvm等。
-Java执行过程
-
-Hotspot JVMJvm判定热点方法的两种方式
-
-基于采样热点的判断周期性检查线程栈顶，经常出现的是热点方法，实现简单但精度低，易受线程阻塞影响。
-
-基于计数器热点的判断虚拟机给每个方法甚至代码块建立一个计数器（方法调用计数器和回边计数器），统计执行次数，超过设定阈值为热点方法。
-
-
-Java语言的特点
-面向对象，容易理解，开发简单
-跨平台，可运行在不同类型的服务器上
-执行性能好，运行效率高
-提供大量API扩展
-多线程支持，增加响应和实时交互能力
-安全性好，自带验证机制，确保程序的可靠性和安全性
-
-Jvm跨平台原理每个类型的操作系统都能运行一个Jvm，Java只需生成Jvm可以执行的代码即可，Jvm底层屏蔽了不同类型服务器的差异。
-Jdk，Jre，Jvm的区别与联系
-Jdk：包括Java的开发和运行环境（Jre）
-Jre： 为Java运行的最小单元
-Jvm：Java运行载体
-
-Java获取明天此刻时间
-Jdk8之前Calendar calendar = Calendar.getInstance();
-calendar.add(Calendar.DATE, 1);
-System.out.println(calendar.getTime());
-Jdk8LocalDateTime today = LocalDateTime.now();
-LocalDateTime tomorrow = today.plusDays(1);
-System.out.println(tomorrow);
----------------------------------------------
-LocalDateTime today = LocalDateTime.now();
-LocalDateTime tomorrow = today.minusDays(-1);
-System.out.println(tomorrow);
-
-Java中跳出多重循环嵌套
-break标签myfor:for (int i = 0; i &lt; 100; i++) {
-    for (int j = 0; j &lt; 100; j++) {
-        System.out.println(&quot;J:&quot; + j);
-        if (j == 10) {
-            // 跳出多重循环
-            break myfor;
-        }
-    }
-}
-全局变量boolean flag = true;
-for (int i = 0; i &lt; 100 &amp;&amp; flag; i++) {
-    for (int j = 0; j &lt; 100; j++) {
-        System.out.println(&quot;J:&quot; + j);
-        if (j == 10) {
-            // 跳出多重循环
-            flag = false;
-            break;
-        }
-    }
-}
-
-Java中的内存泄漏
-长生命周期对象持有短生命的引用，比如，缓存系统，我们加载了一个对象放在缓存中，然后一直不使用这个缓存，由于缓存的对象一直被缓存引用得不到释放，就造成了内存泄漏；
-
-各种连接未调用关闭方法，比如，数据库 Connection 连接，未显性地关闭，就会造成内存泄漏；
-
-内部类持有外部类，如果一个外部类的实例对象的方法返回了一个内部类的实例对象，这个内部类对象被长期引用了，即使那个外部类实例对象不再被使用，但由于内部类持有外部类的实例对象，这个外部类对象将不会被垃圾回收，这也会造成内存泄露；
-
-改变哈希值，当一个对象被存储进 HashSet 集合中以后，就不能修改这个对象中的那些参与计算哈希值的字段了，否则对象修改后的哈希值与最初存储进 HashSet 集合中时的哈希值就不同了，在这种情况下，即使在 contains 方法使用该对象的当前引用作为的参数去 HashSet 集合中检索对象，也将返回找不到对象的结果，这也会导致无法从 HashSet 集合中单独删除当前对象，造成内存泄露。
-
-
-
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-
-
+    <div class="post-content">
+        
+    </div>
+</article>
             </div>
             <div class="aside">
     
