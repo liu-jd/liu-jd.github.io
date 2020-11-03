@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="String特性
+标准不可变类，对他的任何改动就是创建一个新的对象，再把引用指向该对象
+String对象在赋值后就在常量池中缓存，下次创建会先判断是否有缓存对象，有的话直接返回给创建者
+
+String格式化String str = String.format(&quot;我叫%s，今年%d岁，..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | 字符串</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">字符串</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-03</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="String特性"><a href="#String特性" class="headerlink" title="String特性"></a>String特性</h2><ul>
+<li>标准不可变类，对他的任何改动就是创建一个新的对象，再把引用指向该对象</li>
+<li>String对象在赋值后就在常量池中缓存，下次创建会先判断是否有缓存对象，有的话直接返回给创建者</li>
+</ul>
+<h2 id="String格式化"><a href="#String格式化" class="headerlink" title="String格式化"></a>String格式化</h2><pre><code>String str = String.format(&quot;我叫%s，今年%d岁，喜欢%s&quot;, &quot;老王&quot;, 30, &quot;读书&quot;);</code></pre><img src="/2020/11/03/java-03/01.png" class="img-stand">
+
+<h2 id="String比对"><a href="#String比对" class="headerlink" title="String比对"></a>String比对</h2><p>忽略创建方式，直接比对值，使用equals() 方法</p>
+<pre><code>String s1 = &quot;hi,&quot; + &quot;lao&quot; + &quot;wang&quot;;
+String s2 = &quot;hi,&quot;;
+s2 += &quot;lao&quot;;
+s2 += &quot;wang&quot;;
+String s3 = &quot;hi,laowang&quot;;
+System.out.println(s1.equals(s2)); // true
+System.out.println(s1.equals(s3)); // true
+System.out.println(s2.equals(s3)); // true</code></pre><p>如果要忽略字符串的大小写对比值可以使用 equalsIgnoreCase()</p>
+<pre><code>String s1 = &quot;Hi,laowang&quot;;
+String s2 = &quot;hi,laowang&quot;;
+System.out.println(s1.equals(s2)); // false
+System.out.println(s1.equalsIgnoreCase(s2)); // true</code></pre><h2 id="String、StringBuffer、StringBuilder"><a href="#String、StringBuffer、StringBuilder" class="headerlink" title="String、StringBuffer、StringBuilder"></a>String、StringBuffer、StringBuilder</h2><p>字符串相关类型主要有这三种：String、StringBuffer、StringBuilder，其中 StringBuffer、StringBuilder都是可以变的字符串类型，StringBuffer 在字符串拼接时使用 synchronized 来保障线程安全，因此在多线程字符串拼接中推荐使用StringBuffer。StringBuilder 的使用方法和 StringBuffer 一样，它们都继承于 AbstractStringBuilder。</p>
+<h4 id="StringBuffer使用"><a href="#StringBuffer使用" class="headerlink" title="StringBuffer使用"></a>StringBuffer使用</h4><pre><code>StringBuffer sf = new StringBuffer(&quot;lao&quot;);
+// 添加字符串到尾部
+sf.append(&quot;wang&quot;); // 执行结果：laowang
+// 插入字符串到到当前字符串下标的位置
+sf.insert(0,&quot;hi,&quot;); // 执行结果：hi,laowang
+// 修改字符中某个下标的值
+sf.setCharAt(0,&apos;H&apos;); // 执行结果：Hi,laowang</code></pre><h4 id="“-”解读"><a href="#“-”解读" class="headerlink" title="“==”解读"></a>“==”解读</h4><ul>
+<li><p>基本类型：值比较</p>
+</li>
+<li><p>引用类型：引用比较</p>
+<pre><code>String x = &quot;string&quot;;
+String y = &quot;string&quot;;
+String z = new String(&quot;string&quot;);
+System.out.println(x==y); // true
+System.out.println(x==z); // false
+System.out.println(x.equals(y)); // true
+System.out.println(x.equals(z)); // true</code></pre></li>
+</ul>
+<h4 id="equals-解读"><a href="#equals-解读" class="headerlink" title="equals 解读"></a>equals 解读</h4><p>equals 本质上就是 ==，只不过 String 和 Integer 等重写了 equals 方法，把它变成了值比较。</p>
+<pre><code>public boolean equals(Object anObject) {
+    if (this == anObject) {
+        return true;
+    }
+    if (anObject instanceof String) {
+        String anotherString = (String)anObject;
+        int n = value.length;
+        if (n == anotherString.value.length) {
+            char v1[] = value;
+            char v2[] = anotherString.value;
+            int i = 0;
+            while (n-- != 0) {
+                if (v1[i] != v2[i])
+                    return false;
+                i++;
+            }
+            return true;
+        }
+    }
+    return false;
+}</code></pre><h4 id="String比对-1"><a href="#String比对-1" class="headerlink" title="String比对"></a>String比对</h4><pre><code>String s1 = &quot;hi,&quot; + &quot;lao&quot; + &quot;wang&quot;;
+String s2 = &quot;hi,&quot;;
+s2 += &quot;lao&quot;;
+s2 += &quot;wang&quot;;
+String s3 = &quot;hi,laowang&quot;;
+System.out.println(s1 == s2);//false
+System.out.println(s1 == s3);//true
+System.out.println(s2 == s3);//false</code></pre><h4 id="String和StringBuffer传值修改"><a href="#String和StringBuffer传值修改" class="headerlink" title="String和StringBuffer传值修改"></a>String和StringBuffer传值修改</h4><pre><code>//laowang
+public static void main(String[] args) {
+String str = new String(&quot;laowang&quot;);
+change(str);
+System.out.println(str);
+}
+public static void change(String str) {
+    str = &quot;xiaowang&quot;;
+}</code></pre><p>String 为不可变类型，在方法内对 String 修改的时候，相当修改传递过来的是一个 String 副本，所以 String<br>本身的值是不会被修改的，而 StringBuffer 为可变类型，参数传递过来的是对象的引用，对其修改它本身就会发生改变。</p>
+<pre><code>//hi,laowang
+public static void main(String[] args) {
+StringBuffer sf = new StringBuffer(&quot;hi,&quot;);
+changeSf(sf);
+System.out.println(sf);
+}
+public static void changeSf(StringBuffer sf){
+    sf.append(&quot;laowang&quot;);
+}</code></pre><h4 id="String、StringBuffer、StringBuilder-的区别"><a href="#String、StringBuffer、StringBuilder-的区别" class="headerlink" title="String、StringBuffer、StringBuilder 的区别"></a>String、StringBuffer、StringBuilder 的区别</h4><ul>
+<li><strong>可变性</strong>：String 为字符串常量是不可变对象，StringBuffer 与 StringBuilder 为字符串变量是可变对象</li>
+<li><strong>性能</strong>：String 每次修改相当于生成一个新对象，因此性能最低；StringBuffer 使用 synchronized 来保证线程安全，性能优于 String，但不如 StringBuilder</li>
+<li><strong>线程安全</strong>：StringBuilder 为非线程安全类，StringBuffer 为线程安全类</li>
+</ul>
+<h2 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h2><p>字符串常量池是存储在 Java 堆内存中的字符串池，是为防止每次新建字符串带的时间和空间消耗的一种解决方案。在创建字符串时 JVM会首先检查字符串常量池，如果字符串已经存在池中，就返回池中的实例引用，如果字符串不在池中，就会实例化一个字符串放到池中并把当前引用指向该字符串。</p>
+<h4 id="String-不可变性都有哪些好处"><a href="#String-不可变性都有哪些好处" class="headerlink" title="String 不可变性都有哪些好处"></a>String 不可变性都有哪些好处</h4><ul>
+<li>只有当字符串是不可变的，字符串常量池才能实现，字符串池的实现可以在运行时节约很多堆空间，因为不同的字符串变量都指向池中的同一个字符串</li>
+<li>可以避免一些安全漏洞，比如在 Socket 编程中，主机名和端口都是以字符串的形式传入，因为字符串是不可变的，所以它的值是不可改变的，否则黑客们可以钻到空子，改变字符串指向的对象的值，造成安全漏洞</li>
+<li>多线程安全，因为字符串是不可变的，所以同一个字符串实例可以被多个线程共享，保证了多线程的安全性</li>
+<li>适合做缓存的 key，因为字符串是不可变的，所以在它创建的时候哈希值就被缓存了，不需要重新计算速度更快，所以字符串很适合作缓存的中的 key</li>
+</ul>
+<p><strong>String不能被继承，因为被声明为final（最终类）</strong></p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-03/">字符串</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></li>
+            
+        
+            
+                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
+            
+        
+            
+                <li><a href="/2020/06/05/hello-world/">Hello World</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

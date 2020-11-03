@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="异常处理基础语法try{ ... } catch(Exception e){ ... } finally{ ... }
+try ：是用来监测可能会出现异常的代码段。
+catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行。..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | Java异常处理</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">Java异常处理</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-03</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="异常处理基础"><a href="#异常处理基础" class="headerlink" title="异常处理基础"></a>异常处理基础</h2><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><pre><code>try{ ... } catch(Exception e){ ... } finally{ ... }</code></pre><ul>
+<li>try ：是用来监测可能会出现异常的代码段。</li>
+<li>catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行。在 Java 语言中，try 后面可以有多个 catch 代码块，用来捕获不同类型的异常，需要注意的是前面的 catch 捕获异常类型一定不能包含后面的异常类型，这样的话，编译器会报错。</li>
+<li>finally ：不论 try-catch 如何执行，finally 一定是最后执行的代码块，所有通常用来处理一些资源的释放，比如关闭数据库连接、关闭打开的系统资源等。</li>
+</ul>
+<h4 id="多catch异常（细-gt-粗）"><a href="#多catch异常（细-gt-粗）" class="headerlink" title="多catch异常（细-&gt;粗）"></a>多catch异常（细-&gt;粗）</h4><p><strong>Java 虚拟机会从上往下匹配错误类型，因此前面的 catch 异常类型不能包含后面的异常类型。比如上面的代码如果把 Exception放在最前面编译器就会报错</strong></p>
+<pre><code>try {
+    int i = Integer.parseInt(null);
+} catch (ArithmeticException ae) {
+    System.out.println(&quot;ArithmeticException&quot;);
+} catch (NullPointerException ne) {
+    System.out.println(&quot;NullPointerException&quot;);
+} catch (Exception e) {
+    System.out.println(&quot;Exception&quot;);
+}</code></pre><h4 id="异常处理原则"><a href="#异常处理原则" class="headerlink" title="异常处理原则"></a>异常处理原则</h4><ul>
+<li>第一，尽量不要捕获通用异常，也就是像 Exception 这样的异常，而是应该捕获特定异常，这样更有助于你发现问题</li>
+<li>第二，不要忽略异常，像上面的这段代码只是加了 catch，但没有进行如何的错误处理，信息就已经输出了，这样在程序出现问题的时候，根本找不到问题出现的原因，因此要切记不要直接忽略异常。</li>
+</ul>
+<h4 id="异常处理对性能影响"><a href="#异常处理对性能影响" class="headerlink" title="异常处理对性能影响"></a>异常处理对性能影响</h4><ul>
+<li>try-catch 代码段会产生额外的性能开销，或者换个角度说，它往往会影响 JVM 对代码进行优化，因此建议仅捕获有必要的代码段，尽量不要一个大的 try 包住整段的代码；与此同时，利用异常控制代码流程，也不是一个好主意，远比我们通常意义上的条件语句（if/else、switch）要低效。</li>
+<li>Java 每实例化一个 Exception，都会对当时的栈进行快照，这是一个相对比较重的操作。如果发生的非常频繁，这个开销可就不能被忽略了。</li>
+</ul>
+<h2 id="常见的运行时异常"><a href="#常见的运行时异常" class="headerlink" title="常见的运行时异常"></a>常见的运行时异常</h2><ul>
+<li><strong>java.lang.NullPointerException 空指针异常</strong>；出现原因：调用了未经初始化的对象或者是不存在的对象</li>
+<li><strong>java.lang.ClassNotFoundException 指定的类找不到</strong>；出现原因：类的名称和路径加载错误，通常是程序试图通过字符串来加载某个类时引发的异常</li>
+<li><strong>java.lang.NumberFormatException 字符串转换为数字异常</strong>；出现原因：字符型数据中包含非数字型字符</li>
+<li><strong>java.lang.IndexOutOfBoundsException 数组角标越界异常</strong>，常见于操作数组对象时发生</li>
+<li><strong>java.lang.ClassCastException 数据类型转换异常</strong></li>
+<li><strong>java.lang.NoClassDefFoundException 未找到类定义错误</strong></li>
+<li><strong>java.lang.NoSuchMethodException 方法不存在异常</strong></li>
+<li><strong>java.lang.IllegalArgumentException 方法传递参数错误</strong></li>
+</ul>
+<h2 id="Exception-和-Error-的区别"><a href="#Exception-和-Error-的区别" class="headerlink" title="Exception 和 Error 的区别"></a>Exception 和 Error 的区别</h2><ul>
+<li>Exception（异常）是程序正常运行中，可以预期的意外情况，并且可以使用 try/catch 进行捕获处理的。Exception 又分为运行时异常（Runtime Exception）和受检查的异常（Checked Exception），运行时异常编译能通过，但如果运行过程中出现这类未处理的异常，程序会终止运行；而受检查的异常，要么用 try/catch 捕获，要么用 throws 字句声明抛出，否则编译不会通过</li>
+<li>Error（错误）是指突发的非正常情况，通常是不可以恢复的，比如 Java 虚拟机内存溢出，诸如此类的问题叫做 Error</li>
+</ul>
+<h2 id="throw-和-throws-的区别"><a href="#throw-和-throws-的区别" class="headerlink" title="throw 和 throws 的区别"></a>throw 和 throws 的区别</h2><ul>
+<li>throw 语句用在方法体内，表示抛出异常由方法体内的语句处理，执行 throw 一定是抛出了某种异常</li>
+<li>throws 语句用在方法声明的后面，该方法的调用者要对异常进行处理，throws 代表可能会出现某种异常，并不一定会发生这种异常</li>
+</ul>
+<h4 id="Integer-parseInt-null-和-Double-parseDouble-null-抛出的异常一样吗"><a href="#Integer-parseInt-null-和-Double-parseDouble-null-抛出的异常一样吗" class="headerlink" title="Integer.parseInt(null) 和 Double.parseDouble(null) 抛出的异常一样吗"></a>Integer.parseInt(null) 和 Double.parseDouble(null) 抛出的异常一样吗</h4><p><strong>Integer.parseInt(null) 抛出的异常是 NumberFormatException</strong><br><strong>Double.parseDouble(null) 抛出的异常是 NullPointerException</strong><br><strong>由于这两个功能是不同人开发的，因而就产生了两种不同的异常信息</strong></p>
+<h4 id="NoClassDefFoundError-和-ClassNoFoundException-有什么区别"><a href="#NoClassDefFoundError-和-ClassNoFoundException-有什么区别" class="headerlink" title="NoClassDefFoundError 和 ClassNoFoundException 有什么区别"></a>NoClassDefFoundError 和 ClassNoFoundException 有什么区别</h4><ul>
+<li>NoClassDefFoundError 是 Error（错误）类型，而 ClassNoFoundExcept 是 Exception（异常）类型</li>
+<li>ClassNoFoundExcept 是 Java 使用 Class.forName 方法动态加载类，没有加载到，就会抛出 ClassNoFoundExcept 异常</li>
+<li>NoClassDefFoundError 是 Java 虚拟机或者 ClassLoader 尝试加载类的时候却找不到类订阅导致的，也就是说要查找的类在编译的时候是存在的，运行的时候却找不到，这个时候就会出现 NoClassDefFoundError 的错误</li>
+</ul>
+<h4 id="使用-try-catch-为什么比较耗费性能"><a href="#使用-try-catch-为什么比较耗费性能" class="headerlink" title="使用 try-catch 为什么比较耗费性能"></a>使用 try-catch 为什么比较耗费性能</h4><p><strong>Java虚拟机在构造异常实例的时候需要生成该异常的栈轨迹，这个操作会逐一访问当前线程的栈帧，并且记录下各种调试信息，包括栈帧所指向方法的名字，方法所在的类名、文件名，以及在代码中的第几行触发该异常等信息，这就是使用异常捕获耗时的主要原因了</strong></p>
+<h4 id="常见的-OOM-原因有哪些"><a href="#常见的-OOM-原因有哪些" class="headerlink" title="常见的 OOM 原因有哪些"></a>常见的 OOM 原因有哪些</h4><ul>
+<li>数据库资源没有关闭</li>
+<li>加载特别大的图片</li>
+<li>递归次数过多，并一直操作未释放的变量</li>
+</ul>
+<h4 id="finally、finalize-的区别"><a href="#finally、finalize-的区别" class="headerlink" title="finally、finalize 的区别"></a>finally、finalize 的区别</h4><ul>
+<li>finally 是异常处理语句的一部分，表示总是执行</li>
+<li>finalize 是 Object 类的一个方法，子类可以覆盖该方法以实现资源清理工作，垃圾回收之前会调用此方法</li>
+</ul>
+<h4 id="为什么-finally-总能被执行"><a href="#为什么-finally-总能被执行" class="headerlink" title="为什么 finally 总能被执行"></a>为什么 finally 总能被执行</h4><p><strong>finally 总会被执行，都是编译器的作用，因为编译器在编译 Java 代码时，会复制 finally 代码块的内容，然后分别放在 try-catch代码块所有的正常执行路径及异常执行路径的出口中，这样 finally 才会不管发生什么情况都会执行</strong></p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-03/">字符串</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></li>
+            
+        
+            
+                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
+            
+        
+            
+                <li><a href="/2020/06/05/hello-world/">Hello World</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

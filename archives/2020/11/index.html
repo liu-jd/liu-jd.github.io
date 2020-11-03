@@ -74,19 +74,126 @@
                 
     
         <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-09/">java-09</a></div>
+            <div class="post-title"><a href="/2020/11/03/java-06/">java时间类</a></div>
             <div class="post-meta">
                 
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
+                <i class="fa fa-calendar"></i> <time>2020-11-03</time>
                 <span class="dotted">|</span>
                 <i class="fa fa-user"></i> 
             </div>
 
             <div class="post-excerpt">
-                <a href="/2020/11/02/java-09/">
+                <a href="/2020/11/03/java-06/">
                     <p>
                         
-                            
+                            简介
+Jdk8之前：java.util.Date 和 java.util.Calendar
+Jdk8：LocalTime、LocalDateTime、Instant，都位于java.time 包下
+
+时间戳是指格林威治时间 1970-01-01 00:00:00（北京时间 1970-01-01 08:00:00）起至现在的总秒数
+Jdk8之前时间操作获取时间Date date = new Date();
+System.out.println(date);
+Calendar calendar = Calendar.getInstance();
+Date time = calendar.getTime();
+System.out.println(time);获取时间戳long ts = new Date().getTime();
+System.out.println(ts);
+long ts2 = System.currentTimeMillis();
+System.out.println(ts2);
+long ts3 = Calendar.getInstance().getTimeInMillis();
+System.out.println(ts3);格式化时间SimpleDateFormat sf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+System.out.println(sf.format(new Date()));  // output:2019-08-16 21:46:22
+
+
+获取星期几：new SimpleDateFormat(“E”).format(new Date())
+获取当前时区：new SimpleDateFormat(“Z”).format(new Date*())
+
+在多线程下 SimpleDateFormat 是非线程安全的，因此在使用 SimpleDateFormat时要注意这个问题。在多线程下，如果使用不当，可能会造成结果不对或内存泄漏等问题
+时间转换SimpleDateFormat sf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+// String 转 Date
+String str = &quot;2019-10-10 10:10:10&quot;;
+System.out.println(sf.parse(str));
+//时间戳的字符串 转 Date
+String tsString = &quot;1556788591462&quot;;
+// import java.sql
+Timestamp ts = new Timestamp(Long.parseLong(tsString)); // 时间戳的字符串转 Date
+System.out.println(sf.format(ts));当使用 SimpleDateFormat.parse() 方法进行时间转换的时候，SimpleDateFormat的构造函数必须和待转换字符串格式一致
+昨天此刻时间Calendar calendar = Calendar.getInstance();
+calendar.add(Calendar.DATE, -1);
+System.out.println(calendar.getTime());JDK 8 时间操作JDK 8 对时间操作新增了三个类：LocalDateTime、LocalDate、LocalTime
+
+LocalDate 只包含日期，不包含时间，不可变类，且线程安全
+LocalTime 只包含时间，不包含日期，不可变类，且线程安全
+LocalDateTime 既包含了时间又包含了日期，不可变类，且线程安全
+
+获取时间// 获取日期
+LocalDate localDate = LocalDate.now();
+System.out.println(localDate);    // output:2019-08-16
+// 获取时间
+LocalTime localTime = LocalTime.now();
+System.out.println(localTime);    // output:21:09:13.708
+// 获取日期和时间
+LocalDateTime localDateTime = LocalDateTime.now();
+System.out.println(localDateTime);    // output:2019-08-16T21:09:13.708获取时间戳long milli = Instant.now().toEpochMilli(); // 获取当前时间戳（精确到毫秒）
+long second = Instant.now().getEpochSecond(); // 获取当前时间戳（精确到秒）
+System.out.println(milli);  // output:1565932435792
+System.out.println(second); // output:1565932435时间格式化// 时间格式化①
+DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+String timeFormat = dateTimeFormatter.format(LocalDateTime.now());
+System.out.println(timeFormat);  // output:2019-08-16 21:15:43
+// 时间格式化②
+String timeFormat2 = LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+System.out.println(timeFormat2);    // output:2019-08-16 21:17:48时间转换String timeStr = &quot;2019-10-10 06:06:06&quot;;
+LocalDateTime dateTime = LocalDateTime.parse(timeStr,DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+System.out.println(dateTime);获得昨天此刻时间LocalDateTime today = LocalDateTime.now();
+LocalDateTime yesterday = today.plusDays(-1);
+System.out.println(yesterday);获取当前时间
+new Date()
+Calendar.getInstance().getTime()
+LocalDateTime.now()
+
+获取昨天此刻的时间// 获取昨天此刻的时间（JDK 8 以前）
+Calendar c = Calendar.getInstance();
+c.add(Calendar.DATE,-1);
+System.out.println(c.getTime());
+// 获取昨天此刻的时间（JDK 8）
+LocalDateTime todayTime = LocalDateTime.now();
+System.out.println(todayTime.plusDays(-1));获取本月的最后一天// 获取本月的最后一天（JDK 8 以前）
+Calendar ca = Calendar.getInstance();
+ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+System.out.println(ca.getTime());
+// 获取本月的最后一天（JDK 8）
+LocalDate today = LocalDate.now();
+System.out.println(today.with(TemporalAdjusters.lastDayOfMonth()));取当前时间的时间戳
+System.currentTimeMillis()
+new Date().getTime()
+Calendar.getInstance().getTime().getTime()
+Instant.now().toEpochMilli()
+LocalDateTime.now().toInstant(ZoneOffset.of(“+8”)).toEpochMilli()
+
+计算两个时间的相隔时间LocalDateTime dt1 = LocalDateTime.now();
+LocalDateTime dt2 = dt1.plusSeconds(60);
+Duration duration = Duration.between(dt1, dt2);
+System.out.println(duration.getSeconds());  // output:60计算两个日期的相隔日期LocalDate d1 = LocalDate.now();
+LocalDate d2 = d1.plusDays(2);
+Period period = Period.between(d1, d2);
+System.out.println(period.getDays());   //output:2SimpleDateFormat 是非线程安全的，因为它需要通过一个中间对象进行转换，这个中间对象就是Calendar，这样的话就造成非线程安全
+怎么保证 SimpleDateFormat 的线程安全
+使用 Synchronized，在需要时间格式化的操作使用 Synchronized 关键字进行包装，保证线程堵塞格式化；
+手动加锁，把需要格式化时间的代码，写到加锁部分，相对 Synchronized 来说，编码效率更低，性能略好，代码风险较大（风险在于不要忘记在操作的最后，手动释放锁）；
+使用 JDK 8 的 DateTimeFormatter 替代 SimpleDateFormat。
+
+JDK 8 中新增的时间类都有哪些优点
+线程安全性
+使用的便利性（如获取当前时间戳的便利性、增减日期的便利性等）
+编写代码更简单优雅，如当前时间的格式化：LocalDateTime.now().format(DateTimeFormatter.ofPattern(“yyyy-MM-dd HH:mm:ss”));
+
+如何比较两个时间（Date）的大小
+获取两个时间的时间戳，得到两个 long 类型的变量，两个变量相减，通过结果的正负值来判断大小；
+通过 Date 自带的 before()、after()、equals() 等方法比较，代码示例 date1.before(date2)；
+通过 compareTo() 方法比较，代码示例：date1.compareTo(date2)，返回值 -1 表示前一个时间比后一个时间小，0 表示两个时间相等，1 表示前一个时间大于后一个时间。
+
+总结JDK 8 之前使用 java.util.Date 和 java.util.Calendar来操作时间，它们有两个很明显的缺点，第一，非线程安全；第二，API 调用不方便。JDK 8 新增了几个时间操作类 java.time 包下的LocalDateTime、LocalDate、LocalTime、Duration（计算相隔时间）、Period（计算相隔日期）和DateTimeFormatter，提供了多线程下的线程安全和易用性，让我们可以更好的操作时间。
+
                         
                     </p>
                 </a>
@@ -98,19 +205,76 @@
 
     
         <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-08/">java-08</a></div>
+            <div class="post-title"><a href="/2020/11/03/java-05/">Java异常处理</a></div>
             <div class="post-meta">
                 
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
+                <i class="fa fa-calendar"></i> <time>2020-11-03</time>
                 <span class="dotted">|</span>
                 <i class="fa fa-user"></i> 
             </div>
 
             <div class="post-excerpt">
-                <a href="/2020/11/02/java-08/">
+                <a href="/2020/11/03/java-05/">
                     <p>
                         
-                            
+                            异常处理基础语法try{ ... } catch(Exception e){ ... } finally{ ... }
+try ：是用来监测可能会出现异常的代码段。
+catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行。在 Java 语言中，try 后面可以有多个 catch 代码块，用来捕获不同类型的异常，需要注意的是前面的 catch 捕获异常类型一定不能包含后面的异常类型，这样的话，编译器会报错。
+finally ：不论 try-catch 如何执行，finally 一定是最后执行的代码块，所有通常用来处理一些资源的释放，比如关闭数据库连接、关闭打开的系统资源等。
+
+多catch异常（细-&gt;粗）Java 虚拟机会从上往下匹配错误类型，因此前面的 catch 异常类型不能包含后面的异常类型。比如上面的代码如果把 Exception放在最前面编译器就会报错
+try {
+    int i = Integer.parseInt(null);
+} catch (ArithmeticException ae) {
+    System.out.println(&quot;ArithmeticException&quot;);
+} catch (NullPointerException ne) {
+    System.out.println(&quot;NullPointerException&quot;);
+} catch (Exception e) {
+    System.out.println(&quot;Exception&quot;);
+}异常处理原则
+第一，尽量不要捕获通用异常，也就是像 Exception 这样的异常，而是应该捕获特定异常，这样更有助于你发现问题
+第二，不要忽略异常，像上面的这段代码只是加了 catch，但没有进行如何的错误处理，信息就已经输出了，这样在程序出现问题的时候，根本找不到问题出现的原因，因此要切记不要直接忽略异常。
+
+异常处理对性能影响
+try-catch 代码段会产生额外的性能开销，或者换个角度说，它往往会影响 JVM 对代码进行优化，因此建议仅捕获有必要的代码段，尽量不要一个大的 try 包住整段的代码；与此同时，利用异常控制代码流程，也不是一个好主意，远比我们通常意义上的条件语句（if/else、switch）要低效。
+Java 每实例化一个 Exception，都会对当时的栈进行快照，这是一个相对比较重的操作。如果发生的非常频繁，这个开销可就不能被忽略了。
+
+常见的运行时异常
+java.lang.NullPointerException 空指针异常；出现原因：调用了未经初始化的对象或者是不存在的对象
+java.lang.ClassNotFoundException 指定的类找不到；出现原因：类的名称和路径加载错误，通常是程序试图通过字符串来加载某个类时引发的异常
+java.lang.NumberFormatException 字符串转换为数字异常；出现原因：字符型数据中包含非数字型字符
+java.lang.IndexOutOfBoundsException 数组角标越界异常，常见于操作数组对象时发生
+java.lang.ClassCastException 数据类型转换异常
+java.lang.NoClassDefFoundException 未找到类定义错误
+java.lang.NoSuchMethodException 方法不存在异常
+java.lang.IllegalArgumentException 方法传递参数错误
+
+Exception 和 Error 的区别
+Exception（异常）是程序正常运行中，可以预期的意外情况，并且可以使用 try/catch 进行捕获处理的。Exception 又分为运行时异常（Runtime Exception）和受检查的异常（Checked Exception），运行时异常编译能通过，但如果运行过程中出现这类未处理的异常，程序会终止运行；而受检查的异常，要么用 try/catch 捕获，要么用 throws 字句声明抛出，否则编译不会通过
+Error（错误）是指突发的非正常情况，通常是不可以恢复的，比如 Java 虚拟机内存溢出，诸如此类的问题叫做 Error
+
+throw 和 throws 的区别
+throw 语句用在方法体内，表示抛出异常由方法体内的语句处理，执行 throw 一定是抛出了某种异常
+throws 语句用在方法声明的后面，该方法的调用者要对异常进行处理，throws 代表可能会出现某种异常，并不一定会发生这种异常
+
+Integer.parseInt(null) 和 Double.parseDouble(null) 抛出的异常一样吗Integer.parseInt(null) 抛出的异常是 NumberFormatExceptionDouble.parseDouble(null) 抛出的异常是 NullPointerException由于这两个功能是不同人开发的，因而就产生了两种不同的异常信息
+NoClassDefFoundError 和 ClassNoFoundException 有什么区别
+NoClassDefFoundError 是 Error（错误）类型，而 ClassNoFoundExcept 是 Exception（异常）类型
+ClassNoFoundExcept 是 Java 使用 Class.forName 方法动态加载类，没有加载到，就会抛出 ClassNoFoundExcept 异常
+NoClassDefFoundError 是 Java 虚拟机或者 ClassLoader 尝试加载类的时候却找不到类订阅导致的，也就是说要查找的类在编译的时候是存在的，运行的时候却找不到，这个时候就会出现 NoClassDefFoundError 的错误
+
+使用 try-catch 为什么比较耗费性能Java虚拟机在构造异常实例的时候需要生成该异常的栈轨迹，这个操作会逐一访问当前线程的栈帧，并且记录下各种调试信息，包括栈帧所指向方法的名字，方法所在的类名、文件名，以及在代码中的第几行触发该异常等信息，这就是使用异常捕获耗时的主要原因了
+常见的 OOM 原因有哪些
+数据库资源没有关闭
+加载特别大的图片
+递归次数过多，并一直操作未释放的变量
+
+finally、finalize 的区别
+finally 是异常处理语句的一部分，表示总是执行
+finalize 是 Object 类的一个方法，子类可以覆盖该方法以实现资源清理工作，垃圾回收之前会调用此方法
+
+为什么 finally 总能被执行finally 总会被执行，都是编译器的作用，因为编译器在编译 Java 代码时，会复制 finally 代码块的内容，然后分别放在 try-catch代码块所有的正常执行路径及异常执行路径的出口中，这样 finally 才会不管发生什么情况都会执行
+
                         
                     </p>
                 </a>
@@ -122,19 +286,55 @@
 
     
         <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-07/">java-07</a></div>
+            <div class="post-title"><a href="/2020/11/03/java-04/">Java运算和流程控制</a></div>
             <div class="post-meta">
                 
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
+                <i class="fa fa-calendar"></i> <time>2020-11-03</time>
                 <span class="dotted">|</span>
                 <i class="fa fa-user"></i> 
             </div>
 
             <div class="post-excerpt">
-                <a href="/2020/11/02/java-07/">
+                <a href="/2020/11/03/java-04/">
                     <p>
                         
-                            
+                            ++i 和 i++ 的区别
+++i 先自加再赋值
+
+i++ 先赋值再自加
+int i = 0;
+int i2 = i++;
+int j = 0;
+int j2 = ++j;
+System.out.println(&quot;i2=&quot; + i2);// 0
+System.out.println(&quot;j2=&quot; + j2);// 1
+
+++/– 是非线程安全的，也就是说 ++/– 操作在多线程下可能会引发混乱,因为 ++ 操作对于底层操作系统来说，并不是一条 CPU 操作指令，而是三条 CPU操作指令——取值、累加、存储，因此无法保证原子性，就会出现上面代码执行后的误差。
+避免++/– 操作在多线程下的“误差”
+方法一：++/– 操作放在同步块 synchronized 中
+方法二：自己申明锁，把 ++/– 操作放入其中
+方法三：使用 AtomicInteger 类型替代 int 类型
+
+条件运算符（三元运算符）语法布尔表达式 ? 表达式1 ：表达式2运算过程：如果布尔表达式的值为 true，则返回 表达式 1 的值 ，否则返回 表达式 2 的值 。
+for 注意事项循环永远不会停下来，由于舍入误差，因为 0.1 无法精确的用二级制表示，所以上面代码到 0.9000001 之后，会直接跳到 1.0000001，不会等于1，所以循环就永远不会停下来
+public static void main(String[] args) {
+    for (float i = 0; i != 1; i += 0.1) {
+        System.out.println(i);
+    }
+}switch 注意事项Case类型switch 支持的全部类型（JDK8）：char、byte、short、int、Charachter、Byte、Short、Integer、String、enum
+switch 使用时，每个选项最末尾一定不要忘记加 break 关键字，否则会执行多个条件
+int i = 1;
+switch (i) {
+    case 1:
+        System.out.println(&quot;等于1&quot;);
+    case 2:
+        System.out.println(&quot;等于2&quot;);
+    case 3:
+        System.out.println(&quot;等于3&quot;);
+    default:
+        System.out.println(&quot;等于其他&quot;);
+}do/while 之后必须使用分号 ; 结尾
+
                         
                     </p>
                 </a>
@@ -146,19 +346,114 @@
 
     
         <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-06/">java-06</a></div>
+            <div class="post-title"><a href="/2020/11/03/java-03/">字符串</a></div>
             <div class="post-meta">
                 
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
+                <i class="fa fa-calendar"></i> <time>2020-11-03</time>
                 <span class="dotted">|</span>
                 <i class="fa fa-user"></i> 
             </div>
 
             <div class="post-excerpt">
-                <a href="/2020/11/02/java-06/">
+                <a href="/2020/11/03/java-03/">
                     <p>
                         
-                            
+                            String特性
+标准不可变类，对他的任何改动就是创建一个新的对象，再把引用指向该对象
+String对象在赋值后就在常量池中缓存，下次创建会先判断是否有缓存对象，有的话直接返回给创建者
+
+String格式化String str = String.format(&quot;我叫%s，今年%d岁，喜欢%s&quot;, &quot;老王&quot;, 30, &quot;读书&quot;);
+
+String比对忽略创建方式，直接比对值，使用equals() 方法
+String s1 = &quot;hi,&quot; + &quot;lao&quot; + &quot;wang&quot;;
+String s2 = &quot;hi,&quot;;
+s2 += &quot;lao&quot;;
+s2 += &quot;wang&quot;;
+String s3 = &quot;hi,laowang&quot;;
+System.out.println(s1.equals(s2)); // true
+System.out.println(s1.equals(s3)); // true
+System.out.println(s2.equals(s3)); // true如果要忽略字符串的大小写对比值可以使用 equalsIgnoreCase()
+String s1 = &quot;Hi,laowang&quot;;
+String s2 = &quot;hi,laowang&quot;;
+System.out.println(s1.equals(s2)); // false
+System.out.println(s1.equalsIgnoreCase(s2)); // trueString、StringBuffer、StringBuilder字符串相关类型主要有这三种：String、StringBuffer、StringBuilder，其中 StringBuffer、StringBuilder都是可以变的字符串类型，StringBuffer 在字符串拼接时使用 synchronized 来保障线程安全，因此在多线程字符串拼接中推荐使用StringBuffer。StringBuilder 的使用方法和 StringBuffer 一样，它们都继承于 AbstractStringBuilder。
+StringBuffer使用StringBuffer sf = new StringBuffer(&quot;lao&quot;);
+// 添加字符串到尾部
+sf.append(&quot;wang&quot;); // 执行结果：laowang
+// 插入字符串到到当前字符串下标的位置
+sf.insert(0,&quot;hi,&quot;); // 执行结果：hi,laowang
+// 修改字符中某个下标的值
+sf.setCharAt(0,&apos;H&apos;); // 执行结果：Hi,laowang“==”解读
+基本类型：值比较
+
+引用类型：引用比较
+String x = &quot;string&quot;;
+String y = &quot;string&quot;;
+String z = new String(&quot;string&quot;);
+System.out.println(x==y); // true
+System.out.println(x==z); // false
+System.out.println(x.equals(y)); // true
+System.out.println(x.equals(z)); // true
+
+equals 解读equals 本质上就是 ==，只不过 String 和 Integer 等重写了 equals 方法，把它变成了值比较。
+public boolean equals(Object anObject) {
+    if (this == anObject) {
+        return true;
+    }
+    if (anObject instanceof String) {
+        String anotherString = (String)anObject;
+        int n = value.length;
+        if (n == anotherString.value.length) {
+            char v1[] = value;
+            char v2[] = anotherString.value;
+            int i = 0;
+            while (n-- != 0) {
+                if (v1[i] != v2[i])
+                    return false;
+                i++;
+            }
+            return true;
+        }
+    }
+    return false;
+}String比对String s1 = &quot;hi,&quot; + &quot;lao&quot; + &quot;wang&quot;;
+String s2 = &quot;hi,&quot;;
+s2 += &quot;lao&quot;;
+s2 += &quot;wang&quot;;
+String s3 = &quot;hi,laowang&quot;;
+System.out.println(s1 == s2);//false
+System.out.println(s1 == s3);//true
+System.out.println(s2 == s3);//falseString和StringBuffer传值修改//laowang
+public static void main(String[] args) {
+String str = new String(&quot;laowang&quot;);
+change(str);
+System.out.println(str);
+}
+public static void change(String str) {
+    str = &quot;xiaowang&quot;;
+}String 为不可变类型，在方法内对 String 修改的时候，相当修改传递过来的是一个 String 副本，所以 String本身的值是不会被修改的，而 StringBuffer 为可变类型，参数传递过来的是对象的引用，对其修改它本身就会发生改变。
+//hi,laowang
+public static void main(String[] args) {
+StringBuffer sf = new StringBuffer(&quot;hi,&quot;);
+changeSf(sf);
+System.out.println(sf);
+}
+public static void changeSf(StringBuffer sf){
+    sf.append(&quot;laowang&quot;);
+}String、StringBuffer、StringBuilder 的区别
+可变性：String 为字符串常量是不可变对象，StringBuffer 与 StringBuilder 为字符串变量是可变对象
+性能：String 每次修改相当于生成一个新对象，因此性能最低；StringBuffer 使用 synchronized 来保证线程安全，性能优于 String，但不如 StringBuilder
+线程安全：StringBuilder 为非线程安全类，StringBuffer 为线程安全类
+
+字符串常量池字符串常量池是存储在 Java 堆内存中的字符串池，是为防止每次新建字符串带的时间和空间消耗的一种解决方案。在创建字符串时 JVM会首先检查字符串常量池，如果字符串已经存在池中，就返回池中的实例引用，如果字符串不在池中，就会实例化一个字符串放到池中并把当前引用指向该字符串。
+String 不可变性都有哪些好处
+只有当字符串是不可变的，字符串常量池才能实现，字符串池的实现可以在运行时节约很多堆空间，因为不同的字符串变量都指向池中的同一个字符串
+可以避免一些安全漏洞，比如在 Socket 编程中，主机名和端口都是以字符串的形式传入，因为字符串是不可变的，所以它的值是不可改变的，否则黑客们可以钻到空子，改变字符串指向的对象的值，造成安全漏洞
+多线程安全，因为字符串是不可变的，所以同一个字符串实例可以被多个线程共享，保证了多线程的安全性
+适合做缓存的 key，因为字符串是不可变的，所以在它创建的时候哈希值就被缓存了，不需要重新计算速度更快，所以字符串很适合作缓存的中的 key
+
+String不能被继承，因为被声明为final（最终类）
+
                         
                     </p>
                 </a>
@@ -170,79 +465,7 @@
 
     
         <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-05/">java-05</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
-
-            <div class="post-excerpt">
-                <a href="/2020/11/02/java-05/">
-                    <p>
-                        
-                            
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-04/">java-04</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
-
-            <div class="post-excerpt">
-                <a href="/2020/11/02/java-04/">
-                    <p>
-                        
-                            
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-03/">java-03</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
-
-            <div class="post-excerpt">
-                <a href="/2020/11/02/java-03/">
-                    <p>
-                        
-                            
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-02/">java-02</a></div>
+            <div class="post-title"><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></div>
             <div class="post-meta">
                 
                 <i class="fa fa-calendar"></i> <time>2020-11-02</time>
@@ -254,7 +477,52 @@
                 <a href="/2020/11/02/java-02/">
                     <p>
                         
-                            
+                            基本数据类型
+整数型：byte，short，int，long
+布尔型：boolean
+浮点型：float，double
+字符型：char
+
+
+
+查看取值范围public static void main(String[] args) {
+    // Byte 取值：-128 ~ 127
+    System.out.println(String.format(&quot;Byte 取值：%d ~ %d&quot;, Byte.MIN_VALUE, Byte.MAX_VALUE));
+    // Int 取值：-2147483648 ~ 2147483647
+    System.out.println(String.format(&quot;Int 取值：%d ~ %d&quot;, Integer.MIN_VALUE, Integer.MAX_VALUE));
+}包装类1、定义泛型
+2、序列化
+3、类型转换
+4、高频区间数据缓存以 Integer 为例来说，在数值区间为 -128~127时，会直接复用已有对象，在这区间之外的数字才会在堆上产生。
+public static void main(String[] args) {
+        // Integer 高频区缓存范围 -128~127
+        Integer num1 = 127;
+        Integer num2 = 127;
+        // Integer 取值 127 == 结果为 true（值127 num1==num2 =&gt; true）
+        System.out.println(&quot;值127 num1==num2 =&gt; &quot; + (num1 == num2));
+        Integer num3 = 128;
+        Integer num4 = 128;
+        // Integer 取值 128 == 结果为 false（值128 num3==num4 =&gt; false）
+        System.out.println(&quot;值128 num3==num4 =&gt; &quot; + (num3 == num4));
+    }Boolean：使用静态 final 定义，就会返回静态值
+Byte：缓存区 -128~127
+Short：缓存区 -128~127
+Character：缓存区 0~127
+Long：缓存区 -128~127
+Integer：缓存区 -128~127
+包装类注意事项1、int 的默认值是 0，而 Integer 的默认值是 null。
+2、推荐所有包装类对象之间的值比较使用 equals() 方法，因为包装类的非高频区数据会在堆上产生，而高频区又会复用已有对象，这样会导致同样的代码，因为取值的不同，而产生两种截然不同的结果。
+3、Float 和 Double 不会有缓存，其他包装类都有缓存。
+4、- Integer 是唯一一个可以修改缓存范围的包装类，在 VM optons 加入参数：
+-XX:AutoBoxCacheMax=666 即修改缓存最大值为 666 。
+5、如果一个方法中参数类型为原始数据类型，所传入的参数类型为其封装类，则会自动对其进行拆箱；相应地，如果一个方法中参数类型为封装类型，所传入的参数类型为其原始数据类型，则会自动对其进行装箱。
+例：short s=2;s=s+1; 会报错吗？short s=2;s+=1; 会报错吗？
+答：s=s+1 会报错，s+=1 不会报错，因为 s=s+1 会导致 short 类型升级为 int 类型，所以会报错，而 s+=1 还是原来的 short类型，所以不会报错。
+基本数据类型存储
+基本数据类型如果是局部变量，则在方法栈中，方法之行结束，会释放方法栈，局部变量销毁，这也是局部变量只能在方法中使用的原因。
+基本数据类型如果是全局变量，例如类中声明的变量，则存储在堆上，因为全局变量不会随着某个方法的执行结束而消失。
+
+
                         
                     </p>
                 </a>
@@ -285,35 +553,31 @@
     <ul class="item-box">
         
             
-                <li><a href="/2020/11/02/java-09/">java-09</a></li>
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-08/">java-08</a></li>
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-07/">java-07</a></li>
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-06/">java-06</a></li>
+                <li><a href="/2020/11/03/java-03/">字符串</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-05/">java-05</a></li>
+                <li><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-04/">java-04</a></li>
+                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
             
         
             
-                <li><a href="/2020/11/02/java-03/">java-03</a></li>
-            
-        
-            
-                <li><a href="/2020/11/02/java-02/">java-02</a></li>
+                <li><a href="/2020/06/05/hello-world/">Hello World</a></li>
             
         
     </ul>
@@ -325,7 +589,7 @@
         
   <div class="box widget">
     <div class="title">Archives</div>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
   </div>
 
     

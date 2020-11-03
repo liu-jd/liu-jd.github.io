@@ -12,13 +12,22 @@
 
 
 
-    <meta name="description" content=""/>
+    <meta name="description" content="++i 和 i++ 的区别
+++i 先自加再赋值
+
+i++ 先赋值再自加
+int i = 0;
+int i2 = i++;
+int j = 0;
+int j2 = ++j;
+System.out.println(&quot;i2=&quot; + i2);// 0
+System.out.pri..."/>
 
 
 <meta name="Robots" content="all">
 
 
-    <title>Hexo</title>
+    <title>Hexo | Java运算和流程控制</title>
 
 
 <link rel="icon" href="/images/harry.ico">
@@ -71,46 +80,56 @@
 
         <section class="content global-width">
             <div class="main">
-                
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/06/05/hello-world/">Hello World</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-06-05</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
+                <article class="box post">
+    <div class="post-title align-center detail-title">Java运算和流程控制</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-03</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
 
-            <div class="post-excerpt">
-                <a href="/2020/06/05/hello-world/">
-                    <p>
-                        
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post1$ hexo new "My New Post"
+    <div class="post-content">
+        <h2 id="i-和-i-的区别"><a href="#i-和-i-的区别" class="headerlink" title="++i 和 i++ 的区别"></a>++i 和 i++ 的区别</h2><ul>
+<li><p>++i 先自加再赋值</p>
+</li>
+<li><p>i++ 先赋值再自加</p>
+<pre><code>int i = 0;
+int i2 = i++;
+int j = 0;
+int j2 = ++j;
+System.out.println(&quot;i2=&quot; + i2);// 0
+System.out.println(&quot;j2=&quot; + j2);// 1</code></pre></li>
+</ul>
+<p><strong>++/– 是非线程安全的，也就是说 ++/– 操作在多线程下可能会引发混乱,因为 ++ 操作对于底层操作系统来说，并不是一条 CPU 操作指令，而是三条 CPU操作指令——取值、累加、存储，因此无法保证原子性，就会出现上面代码执行后的误差。</strong></p>
+<h4 id="避免-–-操作在多线程下的“误差”"><a href="#避免-–-操作在多线程下的“误差”" class="headerlink" title="避免++/– 操作在多线程下的“误差”"></a>避免++/– 操作在多线程下的“误差”</h4><ul>
+<li>方法一：++/– 操作放在同步块 synchronized 中</li>
+<li>方法二：自己申明锁，把 ++/– 操作放入其中</li>
+<li>方法三：使用 AtomicInteger 类型替代 int 类型</li>
+</ul>
+<h2 id="条件运算符（三元运算符）"><a href="#条件运算符（三元运算符）" class="headerlink" title="条件运算符（三元运算符）"></a>条件运算符（三元运算符）</h2><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><pre><code>布尔表达式 ? 表达式1 ：表达式2</code></pre><p>运算过程：如果布尔表达式的值为 true，则返回 表达式 1 的值 ，否则返回 表达式 2 的值 。</p>
+<h2 id="for-注意事项"><a href="#for-注意事项" class="headerlink" title="for 注意事项"></a>for 注意事项</h2><p><strong>循环永远不会停下来，由于舍入误差，因为 0.1 无法精确的用二级制表示，所以上面代码到 0.9000001 之后，会直接跳到 1.0000001，不会等于1，所以循环就永远不会停下来</strong></p>
+<pre><code>public static void main(String[] args) {
+    for (float i = 0; i != 1; i += 0.1) {
+        System.out.println(i);
+    }
+}</code></pre><h2 id="switch-注意事项"><a href="#switch-注意事项" class="headerlink" title="switch 注意事项"></a>switch 注意事项</h2><h4 id="Case类型"><a href="#Case类型" class="headerlink" title="Case类型"></a>Case类型</h4><p>switch 支持的全部类型（JDK<br>8）：<strong>char、byte、short、int、Charachter、Byte、Short、Integer、String、enum</strong></p>
+<p><strong>switch 使用时，每个选项最末尾一定不要忘记加 break 关键字，否则会执行多个条件</strong></p>
+<pre><code>int i = 1;
+switch (i) {
+    case 1:
+        System.out.println(&quot;等于1&quot;);
+    case 2:
+        System.out.println(&quot;等于2&quot;);
+    case 3:
+        System.out.println(&quot;等于3&quot;);
+    default:
+        System.out.println(&quot;等于其他&quot;);
+}</code></pre><p><strong>do/while 之后必须使用分号 ; 结尾</strong></p>
 
-More info: Writing
-Run server1$ hexo server
-
-More info: Server
-Generate static files1$ hexo generate
-
-More info: Generating
-Deploy to remote sites1$ hexo deploy
-
-More info: Deployment
-
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-
-
+    </div>
+</article>
             </div>
             <div class="aside">
     
