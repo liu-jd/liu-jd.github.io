@@ -12,9 +12,10 @@
 
 
 
-    <meta name="description" content="异常处理基础语法try{ ... } catch(Exception e){ ... } finally{ ... }
+    <meta name="description" content="异常处理基础语法
+try{ ... } catch(Exception e){ ... } finally{ ... }
 try ：是用来监测可能会出现异常的代码段。
-catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行。..."/>
+catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行..."/>
 
 
 <meta name="Robots" content="all">
@@ -84,7 +85,8 @@ catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 tr
     </div>
 
     <div class="post-content">
-        <h2 id="异常处理基础"><a href="#异常处理基础" class="headerlink" title="异常处理基础"></a>异常处理基础</h2><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><pre><code>try{ ... } catch(Exception e){ ... } finally{ ... }</code></pre><ul>
+        <h2 id="异常处理基础"><a href="#异常处理基础" class="headerlink" title="异常处理基础"></a>异常处理基础</h2><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><a id="more"></a>
+<pre><code>try{ ... } catch(Exception e){ ... } finally{ ... }</code></pre><ul>
 <li>try ：是用来监测可能会出现异常的代码段。</li>
 <li>catch ：是用来捕获 try 代码块中某些代码引发的异常，如果 try 里面没有异常发生，那么 catch 也一定不会执行。在 Java 语言中，try 后面可以有多个 catch 代码块，用来捕获不同类型的异常，需要注意的是前面的 catch 捕获异常类型一定不能包含后面的异常类型，这样的话，编译器会报错。</li>
 <li>finally ：不论 try-catch 如何执行，finally 一定是最后执行的代码块，所有通常用来处理一些资源的释放，比如关闭数据库连接、关闭打开的系统资源等。</li>

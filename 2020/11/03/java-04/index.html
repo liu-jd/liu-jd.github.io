@@ -14,14 +14,16 @@
 
     <meta name="description" content="++i 和 i++ 的区别
 ++i 先自加再赋值
-
 i++ 先赋值再自加
+
+
+
 int i = 0;
 int i2 = i++;
 int j = 0;
 int j2 = ++j;
 System.out.println(&quot;i2=&quot; + i2);// 0
-System.out.pri..."/>
+System.out.p..."/>
 
 
 <meta name="Robots" content="all">
@@ -92,17 +94,17 @@ System.out.pri..."/>
 
     <div class="post-content">
         <h2 id="i-和-i-的区别"><a href="#i-和-i-的区别" class="headerlink" title="++i 和 i++ 的区别"></a>++i 和 i++ 的区别</h2><ul>
-<li><p>++i 先自加再赋值</p>
-</li>
-<li><p>i++ 先赋值再自加</p>
+<li>++i 先自加再赋值</li>
+<li>i++ 先赋值再自加</li>
+</ul>
+<a id="more"></a>
+
 <pre><code>int i = 0;
 int i2 = i++;
 int j = 0;
 int j2 = ++j;
 System.out.println(&quot;i2=&quot; + i2);// 0
-System.out.println(&quot;j2=&quot; + j2);// 1</code></pre></li>
-</ul>
-<p><strong>++/– 是非线程安全的，也就是说 ++/– 操作在多线程下可能会引发混乱,因为 ++ 操作对于底层操作系统来说，并不是一条 CPU 操作指令，而是三条 CPU操作指令——取值、累加、存储，因此无法保证原子性，就会出现上面代码执行后的误差。</strong></p>
+System.out.println(&quot;j2=&quot; + j2);// 1</code></pre><p><strong>++/– 是非线程安全的，也就是说 ++/– 操作在多线程下可能会引发混乱,因为 ++ 操作对于底层操作系统来说，并不是一条 CPU 操作指令，而是三条 CPU操作指令——取值、累加、存储，因此无法保证原子性，就会出现上面代码执行后的误差。</strong></p>
 <h4 id="避免-–-操作在多线程下的“误差”"><a href="#避免-–-操作在多线程下的“误差”" class="headerlink" title="避免++/– 操作在多线程下的“误差”"></a>避免++/– 操作在多线程下的“误差”</h4><ul>
 <li>方法一：++/– 操作放在同步块 synchronized 中</li>
 <li>方法二：自己申明锁，把 ++/– 操作放入其中</li>
