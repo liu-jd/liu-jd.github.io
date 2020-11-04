@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="访问修饰符
+在开发中要尽可能地加上访问修饰符（提高程序的可读性）
+无特殊要求的情况下，类内部的变量应该设置为私有的（防止外部篡改）
+
+
+
+
+构造方法五大原则
+构造方法必须与类同名
+
+构造方法的参数可以没有或者有多个
+
+构造方法不能有返回值
+
+每个类可以有一个或多个构造方法
+
+构造方法总是伴随着..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | 类与 Object 的应用</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">类与 Object 的应用</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-04</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="访问修饰符"><a href="#访问修饰符" class="headerlink" title="访问修饰符"></a>访问修饰符</h2><ul>
+<li>在开发中要尽可能地加上访问修饰符（提高程序的可读性）</li>
+<li>无特殊要求的情况下，类内部的变量应该设置为私有的（防止外部篡改）<a id="more"></a>
+<img src="/2020/11/04/java-08/01.png" class="img-stand">
+
+</li>
+</ul>
+<h2 id="构造方法五大原则"><a href="#构造方法五大原则" class="headerlink" title="构造方法五大原则"></a>构造方法五大原则</h2><ul>
+<li><p>构造方法必须与类同名</p>
+</li>
+<li><p>构造方法的参数可以没有或者有多个</p>
+</li>
+<li><p>构造方法不能有返回值</p>
+</li>
+<li><p>每个类可以有一个或多个构造方法</p>
+</li>
+<li><p>构造方法总是伴随着 new 操作一起使用</p>
+<pre><code>class Cat {
+    // 构造方法
+    public Cat(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    public static void main(String[] args) {
+        Cat cat = new Cat(&quot;喵星人&quot;,2);
+        System.out.println(cat.getName());
+        System.out.println(cat.getAge());
+    }
+    private String name;
+    private int age;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+}</code></pre></li>
+</ul>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><ul>
+<li><p>将公共的变量或者方法提取到超类中</p>
+</li>
+<li><p>除非所有的方法都有继承的意义，否则不要使用继承</p>
+</li>
+<li><p>在方法覆盖时不要改变原有方法的预期行为</p>
+<pre><code>class Animal {
+    public void eat() {
+        System.out.println(&quot;Animal&quot;);
+    }
+}
+class Cat extends Animal {
+}
+public class eTest implements Cloneable {
+    public static void main(String[] args) {
+        Animal cat = new Cat();
+        cat.eat();
+    }
+}</code></pre><h2 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h2><p>Object 类是 Java 中的一个特殊类，它是所有类的父类，Java 中的类都直接或间接的继承自 Object 类，Object 类的常用方法如下</p>
+</li>
+<li><p>equals()：对比两个对象是否相同</p>
+</li>
+<li><p>getClass()：返回一个对象的运行时类</p>
+</li>
+<li><p>hashCode()：返回该对象的哈希码值</p>
+</li>
+<li><p>toString()：返回该对象的字符串描述</p>
+</li>
+<li><p>wait()：使当前的线程等待</p>
+</li>
+<li><p>notify()：唤醒在此对象监视器上等待的单个线程</p>
+</li>
+<li><p>notifyAll()：唤醒在此对象监视器上等待的所有线程</p>
+</li>
+<li><p>clone()：克隆一个新对象</p>
+</li>
+</ul>
+<h4 id="Java-中可以多继承吗"><a href="#Java-中可以多继承吗" class="headerlink" title="Java 中可以多继承吗"></a>Java 中可以多继承吗</h4><p><strong>Java 中只能单继承，但可以实现多接口</strong></p>
+<h4 id="Java-中为什么不能实现多继承"><a href="#Java-中为什么不能实现多继承" class="headerlink" title="Java 中为什么不能实现多继承"></a>Java 中为什么不能实现多继承</h4><p><strong>从技术的实现角度来说，是为了降低编程的复杂性。假设 A 类中有一个m()方法，B 类中也有一个m()方法，如果 C 类同时继承 A 类和 B类，那调用 C 类的 m() 方法时就会产生歧义，这无疑增加了程序开发的复杂性，为了避免这种问题的产生，Java 语言规定不能多继承类，但可以实现多接口</strong></p>
+<h4 id="覆盖和重载有哪些区别"><a href="#覆盖和重载有哪些区别" class="headerlink" title="覆盖和重载有哪些区别"></a>覆盖和重载有哪些区别</h4><ul>
+<li>覆盖（Override）是指子类对父类方法的一种重写，只能比父类抛出更少的异常（细-&gt;粗），访问权限不能比父类的小（大-&gt;小），被覆盖的方法不能是 private，否则只是在子类中重新定义了一个方法</li>
+<li>重载（Overload）表示同一个类中可以有多个名称相同的方法，但这些方法的参数列表各不相同</li>
+</ul>
+<h4 id="构造方法有哪些特征"><a href="#构造方法有哪些特征" class="headerlink" title="构造方法有哪些特征"></a>构造方法有哪些特征</h4><ul>
+<li>构造方法必须与类名相同</li>
+<li>构造方法没有返回类型（void 也不能有）</li>
+<li>构造方法不能被继承、覆盖、直接调用</li>
+<li>类定义时提供了默认的无参构造方法</li>
+<li>构造方法可以私有，外部无法使用私有构造方法创建对象</li>
+</ul>
+<h4 id="构造函数能不能被覆盖？能不能被重载"><a href="#构造函数能不能被覆盖？能不能被重载" class="headerlink" title="构造函数能不能被覆盖？能不能被重载"></a>构造函数能不能被覆盖？能不能被重载</h4><p><strong>构造函数可以重载，但不能覆盖</strong></p>
+<h4 id="以下程序执行的结果"><a href="#以下程序执行的结果" class="headerlink" title="以下程序执行的结果"></a>以下程序执行的结果</h4><pre><code>//251346
+class ExecTest {
+    public static void main(String[] args) {
+        Son son = new Son();
+    }
+}
+class Parent{
+    {
+        System.out.print(&quot;1&quot;);
+    }
+    static{
+        System.out.print(&quot;2&quot;);
+    }
+    public Parent(){
+        System.out.print(&quot;3&quot;);
+    }
+}
+class Son extends Parent{
+    {
+        System.out.print(&quot;4&quot;);
+    }
+    static{
+        System.out.print(&quot;5&quot;);
+    }
+    public Son(){
+        System.out.print(&quot;6&quot;);
+    }
+}</code></pre><p>加载顺序如下</p>
+<ul>
+<li>执行父类的静态成员</li>
+<li>执行子类的静态成员</li>
+<li>父类的实例成员和实例初始化</li>
+<li>执行父类构造方法</li>
+<li>子类的实例成员和实例初始化</li>
+<li>子类构造方法</li>
+</ul>
+<h4 id="以下程序执行的结果是"><a href="#以下程序执行的结果是" class="headerlink" title="以下程序执行的结果是"></a>以下程序执行的结果是</h4><pre><code>//00B
+class A {
+    public int x = 0;
+    public static int y = 0;
+    public void m() {
+        System.out.print(&quot;A&quot;);
+    }
+}
+class B extends A {
+    public int x = 1;
+    public static int y = 2;
+    public void m() {
+        System.out.print(&quot;B&quot;);
+    }
+    public static void main(String[] args) {
+        A myClass = new B();
+        System.out.print(myClass.x);
+        System.out.print(myClass.y);
+        myClass.m();
+    }
+}</code></pre><p><strong>在 Java 语言中，变量不能被重写</strong></p>
+<h4 id="以下程序执行的结果是-1"><a href="#以下程序执行的结果是-1" class="headerlink" title="以下程序执行的结果是"></a>以下程序执行的结果是</h4><pre><code>//BA
+//BA
+//BA
+//AD
+class A {
+    public void m(A a) {
+        System.out.println(&quot;AA&quot;);
+    }
+    public void m(D d) {
+        System.out.println(&quot;AD&quot;);
+    }
+}
+class B extends A {
+    @Override
+    public void m(A a) {
+        System.out.println(&quot;BA&quot;);
+    }
+    public void m(B b) {
+        System.out.println(&quot;BD&quot;);
+    }
+    public static void main(String[] args) {
+        A a = new B();
+        B b = new B();
+        C c = new C();
+        D d = new D();
+        a.m(a);
+        a.m(b);
+        a.m(c);
+        a.m(d);
+    }
+}
+class C extends B{}
+class D extends B{}</code></pre><h4 id="Java-中的-this-和-super-有哪些区别"><a href="#Java-中的-this-和-super-有哪些区别" class="headerlink" title="Java 中的 this 和 super 有哪些区别"></a>Java 中的 this 和 super 有哪些区别</h4><ul>
+<li>基础概念：this 是访问本类实例属性或方法；super 是子类访问父类中的属性或方法</li>
+<li>查找范围：this 先查本类，没有的话再查父类；super 直接访问父类</li>
+<li>使用：this 单独使用时，表示当前对象；super 在子类覆盖父类方法时，访问父类同名方法</li>
+</ul>
+<h4 id="在静态方法中可以使用-this-或-super-吗？为什么"><a href="#在静态方法中可以使用-this-或-super-吗？为什么" class="headerlink" title="在静态方法中可以使用 this 或 super 吗？为什么"></a>在静态方法中可以使用 this 或 super 吗？为什么</h4><p><strong>在静态方法中不能使用 this 或 super，因为 this 和 super指代的都是需要被创建出来的对象，而静态方法在类加载的时候就已经创建了，所以没办法在静态方法中使用 this 或 super</strong></p>
+<h4 id="静态方法的使用需要注意哪些问题"><a href="#静态方法的使用需要注意哪些问题" class="headerlink" title="静态方法的使用需要注意哪些问题"></a>静态方法的使用需要注意哪些问题</h4><ul>
+<li>静态方法中不能使用实例成员变量和实例方法</li>
+<li>静态方法中不能使用 this 和 super</li>
+</ul>
+<h4 id="final-修饰符的作用有哪些"><a href="#final-修饰符的作用有哪些" class="headerlink" title="final 修饰符的作用有哪些"></a>final 修饰符的作用有哪些</h4><ul>
+<li>被 final 修饰的类不能被继承</li>
+<li>被 final 修饰的方法不能被重写</li>
+<li>被 final 修饰的变量不能被修改</li>
+</ul>
+<h4 id="覆盖-equals-方法的时候需要遵守哪些规则"><a href="#覆盖-equals-方法的时候需要遵守哪些规则" class="headerlink" title="覆盖 equals() 方法的时候需要遵守哪些规则"></a>覆盖 equals() 方法的时候需要遵守哪些规则</h4><ul>
+<li>自反性：对于任意非空的引用值 x，x.equals(x) 返回值为真</li>
+<li>对称性：对于任意非空的引用值 x 和 y，x.equals(y) 必须和 y.equals(x) 返回相同的结果</li>
+<li>传递性：对于任意的非空引用值 x、y 和 z，如果 x.equals(y) 返回值为真，y.equals(z) 返回值也为真，那么 x.equals(z) 也必须返回值为真</li>
+<li>一致性：对于任意非空的引用值 x 和 y，无论调用 x.equals(y) 多少次，都要返回相同的结果。在比较的过程中，对象中的数据不能被修改</li>
+<li>对于任意的非空引用值 x，x.equals(null) 必须返回假</li>
+</ul>
+<h4 id="在-Object-中-notify-和-notifyAll-方法有什么区别"><a href="#在-Object-中-notify-和-notifyAll-方法有什么区别" class="headerlink" title="在 Object 中 notify() 和 notifyAll() 方法有什么区别"></a>在 Object 中 notify() 和 notifyAll() 方法有什么区别</h4><p>notify() 方法随机唤醒一个等待的线程，而 notifyAll() 方法将唤醒所有在等待的线程</p>
+<h4 id="如何使用-clone-方法"><a href="#如何使用-clone-方法" class="headerlink" title="如何使用 clone() 方法"></a>如何使用 clone() 方法</h4><p><strong>如果是同一个类中使用的话，只需要实现 Cloneable 接口，定义或者处理 CloneNotSupportedException</strong><br>异常即可</p>
+<pre><code>class CloneTest implements Cloneable {
+    int num;
+    public static void main(String[] args) throws CloneNotSupportedException {
+        CloneTest ct = new CloneTest();
+        ct.num = 666;
+        System.out.println(ct.num);
+        CloneTest ct2 = (CloneTest) ct.clone();
+        System.out.println(ct2.num);
+    }
+}</code></pre><p><strong>如果非内部类调用 clone() 的话，需要重写 clone() 方法</strong></p>
+<pre><code>class CloneTest implements Cloneable {
+    int num;
+    public static void main(String[] args) throws CloneNotSupportedException {
+        CloneTest ct = new CloneTest();
+        ct.num = 666;
+        System.out.println(ct.num);
+        CloneTest ct2 = (CloneTest) ct.clone();
+        System.out.println(ct2.num);
+    }
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+public class CloneTest2 {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        CloneTest ct = new CloneTest();
+        ct.num = 666;
+        System.out.println(ct.num);
+        CloneTest ct2 = (CloneTest) ct.clone();
+        System.out.println(ct2.num);
+    }
+}</code></pre>
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/04/java-08/">类与 Object 的应用</a></li>
+            
+        
+            
+                <li><a href="/2020/11/04/java-07/">数组和排序算法</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-03/">字符串</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></li>
+            
+        
+            
+                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

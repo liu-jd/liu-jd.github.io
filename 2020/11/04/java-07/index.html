@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="数组定义
+方式一：int[] arr;
+方式二：int arr[];
+
+
+
+初始化// 初始化方式一
+int[] arr = new int[5];
+// 初始化方式二
+int[] arr2 = new int[]{1, 2, 3, 4, 5};
+// 初始化方式二的延伸版，可省略 new i..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | 数组和排序算法</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">数组和排序算法</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-04</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="数组定义"><a href="#数组定义" class="headerlink" title="数组定义"></a>数组定义</h2><ul>
+<li>方式一：int[] arr;</li>
+<li>方式二：int arr[];<a id="more"></a>
+
+</li>
+</ul>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><pre><code>// 初始化方式一
+int[] arr = new int[5];
+// 初始化方式二
+int[] arr2 = new int[]{1, 2, 3, 4, 5};
+// 初始化方式二的延伸版，可省略 new int[] 直接赋值
+int[] arr3 = {1, 2, 3, 4, 5};</code></pre><p><strong>在 Java 中，数组初始化如果声明了数组长度，则不能直接赋值</strong></p>
+<h4 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h4><ul>
+<li><p>方式一：传统 for 循环</p>
+<pre><code>Integer[] arr = {2, 3, 6, 7, 9};
+// 方式一：传统 for
+for (int i = 0; i &lt; arr.length; i++) {
+System.out.println(arr[i]);
+}</code></pre></li>
+<li><p>方式二：for each</p>
+<pre><code>Integer[] arr = {2, 3, 6, 7, 9};
+// 方式二：for each
+for (int i : arr) {
+System.out.println(i);
+}</code></pre></li>
+<li><p>方式三：JDK 8 中的 Lambda 表达式</p>
+<pre><code>Integer[] arr = {2, 3, 6, 7, 9};
+// 方式三：jdk 8 Lambda
+Arrays.asList(arr).forEach(x -&gt; System.out.println(x));</code></pre></li>
+</ul>
+<p><strong>其中 for each 的方式，写法更简洁，也更不容易出错，不必为数组的越界而担心</strong></p>
+<h4 id="拷贝"><a href="#拷贝" class="headerlink" title="拷贝"></a>拷贝</h4><pre><code>//[3, 4, 9]
+int[] arr = {3, 4, 9};
+int[] arr2 = Arrays.copyOf(arr, arr.length);
+System.out.println(Arrays.toString(arr2));</code></pre><p><strong>Arrays.copyOf(array,newLength) 第二个参数 newLength表示声明此数组的长度，可以比拷贝的数组的长度长，多出来的元素会初始化为 0 值</strong></p>
+<h2 id="数组填充与合并"><a href="#数组填充与合并" class="headerlink" title="数组填充与合并"></a>数组填充与合并</h2><h4 id="数组填充"><a href="#数组填充" class="headerlink" title="数组填充"></a>数组填充</h4><pre><code>//[6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
+int[] arr = new int[10];
+Arrays.fill(arr, 6);
+System.out.println(Arrays.toString(arr));</code></pre><p><strong>使用 Arrays.fill() 会覆盖原有的值，即使数组之前有赋值操作，也会被覆盖</strong></p>
+<h4 id="数组合并"><a href="#数组合并" class="headerlink" title="数组合并"></a>数组合并</h4><pre><code>//[2, 8, 13, 11, 6, 7, 66, 88]
+int[] arr = {2, 8, 13, 11, 6, 7};
+int[] arr2 = {66, 88};
+// 合并数组
+int[] arr3 = org.apache.commons.lang3.ArrayUtils.addAll(arr, arr2);
+System.out.println(Arrays.toString(arr3));</code></pre><h2 id="排序与算法"><a href="#排序与算法" class="headerlink" title="排序与算法"></a>排序与算法</h2><h4 id="数组排序"><a href="#数组排序" class="headerlink" title="数组排序"></a>数组排序</h4><pre><code>//[2, 6, 7, 8, 11, 13]
+int[] arr = {2, 8, 13, 11, 6, 7};
+Arrays.sort(arr);
+System.out.println(Arrays.toString(arr));</code></pre><h4 id="数组逆序"><a href="#数组逆序" class="headerlink" title="数组逆序"></a>数组逆序</h4><pre><code>//[13, 11, 8, 7, 6, 2]
+int[] arr = {2, 8, 13, 11, 6, 7};
+int[] arr = {2, 8, 13, 11, 6, 7};
+// 数组正序（排序）
+Arrays.sort(arr);
+// 数组逆序
+org.apache.commons.lang3.ArrayUtils.reverse(arr);
+System.out.println(Arrays.toString(arr));</code></pre><h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><p>依次比较相邻的两个数，把较大的值放后面</p>
+<pre><code>//排序前：[2, 8, 13, 11, 6, 7]
+//排序后：[2, 6, 7, 8, 11, 13]
+int[] arr = {2, 8, 13, 11, 6, 7};
+System.out.println(&quot;排序前：&quot; + Arrays.toString(arr));
+for (int i = 0; i &lt; arr.length; i++) {
+    // 因为冒泡是把每轮循环中较大的数飘到后面，所以是 arr.length-i-1
+    for (int j = 0; j &lt; arr.length - i - 1; j++) {
+        if (arr[j] &gt; arr[j + 1]) {
+            // 元素交换
+            int temp = arr[j + 1];
+            arr[j + 1] = arr[j];
+            arr[j] = temp;
+        }
+    }
+}
+System.out.println(&quot;排序后：&quot; + Arrays.toString(arr));</code></pre><h4 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h4><p>每次从待排序的数据元素中选出最小（或最大）的一个元素，顺序放在已排好序的数列的最后，直到全部待排序的数据元素排完</p>
+<pre><code>//排序前：[2, 8, 13, 11, 6, 7]
+//排序后：[2, 6, 7, 8, 11, 13]
+int[] arr = {2, 8, 13, 11, 6, 7};
+System.out.println(&quot;排序前：&quot; + Arrays.toString(arr));
+for (int i = 0; i &lt; arr.length; i++) {
+int lowerIndex = i;
+for (int j = i + 1; j &lt; arr.length; j++) {
+    // 找出最小的一个索引
+    if (arr[j] &lt; arr[lowerIndex]) {
+    lowerIndex = j;
+    }
+}
+// 交换
+int temp = arr[i];
+arr[i] = arr[lowerIndex];
+arr[lowerIndex] = temp;
+}
+System.out.println(&quot;排序后：&quot; + Arrays.toString(arr));</code></pre><h4 id="元素查找"><a href="#元素查找" class="headerlink" title="元素查找"></a>元素查找</h4><pre><code>int[] arr = {1, 3, 4, 5};
+// Arrays.binarySearch() 使用二分法查询某值
+int index = Arrays.binarySearch(arr, 5);
+System.out.println(index);</code></pre><p><strong>使用 Arrays.binarySearch 之前一定要先调用 Arrays.sort() 对数组进行排序，否则返回的结果有误。</strong></p>
+<h4 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h4><pre><code>//1
+//[0, 1, 2, 3]
+//[0, 1, 2, 3]
+// 声明二维数组
+int[][] arr = new int[2][4];
+//循环二维数组
+for (int i = 0; i &lt; arr.length; i++) {
+    for (int j = 0; j &lt; arr[0].length; j++) {
+        // 二维数组赋值
+        arr[i][j] = j;
+    }
+}
+// 二维数组取值
+System.out.println(arr[0][1]);
+// 打印二维数组
+System.out.println(Arrays.toString(arr[0]));
+System.out.println(Arrays.toString(arr[1]));</code></pre><h2 id="数组类型转换"><a href="#数组类型转换" class="headerlink" title="数组类型转换"></a>数组类型转换</h2><h4 id="字符串转数组"><a href="#字符串转数组" class="headerlink" title="字符串转数组"></a>字符串转数组</h4><pre><code>String str = &quot;laowang,stone,wanglei&quot;;
+String[] arr = str.split(&quot;,&quot;); // 字符串转数组
+System.out.println(arr[0]);</code></pre><h4 id="数组转字符串"><a href="#数组转字符串" class="headerlink" title="数组转字符串"></a>数组转字符串</h4><pre><code>String[] arr = {&quot;laowang&quot;, &quot;stone&quot;, &quot;wanglei&quot;};
+String str = Arrays.toString(arr);
+System.out.println(str);</code></pre><h4 id="数组转集合"><a href="#数组转集合" class="headerlink" title="数组转集合"></a>数组转集合</h4><pre><code>String[] strArr = {&quot;cat&quot;, &quot;dog&quot;};
+List list = Arrays.asList(strArr);
+System.out.println(list);</code></pre><h4 id="集合转数组"><a href="#集合转数组" class="headerlink" title="集合转数组"></a>集合转数组</h4><pre><code>List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add(&quot;cat&quot;);
+list.add(&quot;dog&quot;);
+// 集合转换为数组
+String[] arr = list.toArray(new String[list.size()]);
+System.out.println(Arrays.toString(arr));</code></pre><h4 id="数组和集合的区别"><a href="#数组和集合的区别" class="headerlink" title="数组和集合的区别"></a>数组和集合的区别</h4><ul>
+<li>集合可以存储任意类型的对象数据，数组只能存储同一种数据类型的数据</li>
+<li>集合的长度是会发生变化的，数组的长度是固定的</li>
+<li>集合相比数组功能更强大，数组相比集合效率更高</li>
+</ul>
+<h4 id="以下数组比较的结果分别是什么"><a href="#以下数组比较的结果分别是什么" class="headerlink" title="以下数组比较的结果分别是什么"></a>以下数组比较的结果分别是什么</h4><pre><code>String[] strArr = {&quot;dog&quot;, &quot;cat&quot;, &quot;pig&quot;, &quot;bird&quot;};
+String[] strArr2 = {&quot;dog&quot;, &quot;cat&quot;, &quot;pig&quot;, &quot;bird&quot;};
+System.out.println(Arrays.equals(strArr, strArr2));//true
+System.out.println(strArr.equals(strArr2));//false
+System.out.println(strArr == strArr2);//false</code></pre><p><strong>strArr == strArr2 为引用比较，因此结果一定是 false，而数组本身的比较也就是 strArr.equals(strArr2)为 false 的原因是因为数组没有重写 equals 方法，因此也是引用比较,而 Arrays.equals 的结果之所以是 true 是因为 Arrays.equals 重写了 equals 方法</strong></p>
+<h4 id="Arrays-对象有哪些常用的方法"><a href="#Arrays-对象有哪些常用的方法" class="headerlink" title="Arrays 对象有哪些常用的方法"></a>Arrays 对象有哪些常用的方法</h4><ul>
+<li>Arrays.copyOf() 数组拷贝</li>
+<li>Arrays.asList() 数组转为 List 集合</li>
+<li>Arrays.fill() 数组赋值</li>
+<li>Arrays.sort() 数组排序</li>
+<li>Arrays.toString() 数组转字符串</li>
+<li>Arrays.binarySearch() 二分法查询元素</li>
+<li>Arrays.equals() 比较两个数组的值</li>
+</ul>
+<h4 id="查询字符串数组中是否包含某个值有几种方法"><a href="#查询字符串数组中是否包含某个值有几种方法" class="headerlink" title="查询字符串数组中是否包含某个值有几种方法"></a>查询字符串数组中是否包含某个值有几种方法</h4><ul>
+<li><p>方式一：Arrays.asList(array).contains(“key”)</p>
+</li>
+<li><p>方式二：Arrays.binarySearch(array, “key”)</p>
+<pre><code>String[] arr = {&quot;doc&quot;, &quot;pig&quot;, &quot;cat&quot;};
+// 方式一：Arrays.asList(array).contains
+boolean bool = Arrays.asList(arr).contains(&quot;cat&quot;);
+System.out.println(bool);
+// 方式二：Arrays.binarySearch
+Arrays.sort(arr);
+boolean bool2 = Arrays.binarySearch(arr, &quot;cat&quot;) &gt; -1;
+System.out.println(bool2);</code></pre></li>
+</ul>
+<h4 id="修改数组的第三个到第五个元素的值为-6"><a href="#修改数组的第三个到第五个元素的值为-6" class="headerlink" title="修改数组的第三个到第五个元素的值为 6"></a>修改数组的第三个到第五个元素的值为 6</h4><ul>
+<li><p>for 循环方式</p>
+<pre><code>int[] arrInt = new int[10];
+for (int i = 0; i &lt; arrInt.length; i++) {
+    if (i &gt;= 2 &amp;&amp; i &lt; 5) {
+        arrInt[i] = 6;
+    }
+}</code></pre></li>
+<li><p>Arrays.fill() 方式</p>
+<pre><code>int[] arrInt = new int[10];
+Arrays.fill(arrInt, 2, 5, 6);</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2></li>
+</ul>
+<p><strong>在Java中数组本质是引用类型，数组只能用来存储固定大小的同类型元素。在Java中很多集合的内部都是依赖数组实现的，如 ArrayList 和HashMap等</strong></p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/04/java-08/">类与 Object 的应用</a></li>
+            
+        
+            
+                <li><a href="/2020/11/04/java-07/">数组和排序算法</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-03/">字符串</a></li>
+            
+        
+            
+                <li><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></li>
+            
+        
+            
+                <li><a href="/2020/10/30/java-01/">Java执行</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
