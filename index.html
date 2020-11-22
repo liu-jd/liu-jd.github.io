@@ -74,6 +74,285 @@
                 
     
         <article class="box post post-item">
+            <div class="post-title"><a href="/2020/11/22/java-13/">Map</a></div>
+            <div class="post-meta">
+                
+                <i class="fa fa-calendar"></i> <time>2020-11-22</time>
+                <span class="dotted">|</span>
+                <i class="fa fa-user"></i> 
+            </div>
+
+            <div class="post-excerpt">
+                <a href="/2020/11/22/java-13/">
+                    <p>
+                        
+                            
+Map 的继承关系图
+
+Map 简介Map 常用的实现类如下
+
+Hashtable ：Java 早期提供的一个哈希表实现，它是线程安全的，不支持 null 键和值，因为它的性能不如 ConcurrentHashMap，所以很少被推荐使用
+
+HashMap ：最常用的哈希表实现，如果程序中没有多线程的需求，HashMap 是一个很好的选择，支持 null 键和值，如果在多线程中可用 ConcurrentHashMap 替代
+
+TreeMap ：基于红黑树的一种提供顺序访问的 Map，自身实现了 key 的自然排序，也可以指定 Comparator 来自定义排序
+
+LinkedHashMap ：HashMap 的一个子类，保存了记录的插入顺序，可在遍历时保持与插入一样的顺序使用示例，请参考以下代码：
+Map hashMap = new HashMap();
+// 增加元素
+hashMap.put(&quot;name&quot;, &quot;老王&quot;);
+hashMap.put(&quot;age&quot;, &quot;30&quot;);
+hashMap.put(&quot;sex&quot;, &quot;你猜&quot;);
+// 删除元素
+hashMap.remove(&quot;age&quot;);
+// 查找单个元素
+System.out.println(hashMap.get(&quot;age&quot;));
+// 循环所有的 key
+for (Object k : hashMap.keySet()) {
+    System.out.println(k);
+}
+// 循环所有的值
+for (Object v : hashMap.values()) {
+    System.out.println(v);
+}
+
+HashMap 数据结构HashMap 底层的数据是数组被成为哈希桶，每个桶存放的是链表，链表中的每个节点，就是 HashMap 中的每个元素。在 JDK 8 当链表长度大于等于8 时，就会转成红黑树的数据结构，以提升查询和插入的效率
+HashMap 重要方法
+添加方法：put(Object key, Object value)
+执行流程如下：
+
+对 key 进行 hash 操作，计算存储 index；
+
+判断是否有哈希碰撞，如果没碰撞直接放到哈希桶里，如果有碰撞则以链表的形式存储；
+
+判断已有元素的类型，决定是追加树还是追加链表，当链表大于等于 8 时，把链表转换成红黑树；
+
+如果节点已经存在就替换旧值；
+
+判断是否超过阀值，如果超过就要扩容。
+
+
+源码及说明
+public V put(K key, V value) {
+    // 对 key 进行 hash()
+    return putVal(hash(key), key, value, false, true);
+}
+static final int hash(Object key) {
+    int h;
+// 对 key 进行 hash() 的具体实现
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+            boolean evict) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+    // tab为空则创建
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;
+    // 计算 index，并对 null 做处理
+    if ((p = tab[i = (n - 1) &amp; hash]) == null)
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        Node&lt;K,V&gt; e; K k;
+        // 节点存在
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+            e = p;
+        // 该链为树
+        else if (p instanceof TreeNode)
+            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+        // 该链为链表
+        else {
+            for (int binCount = 0; ; ++binCount) {
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null);
+                    if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);
+                    break;
+                }
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                    break;
+                p = e;
+            }
+        }
+        // 写入
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value;
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        }
+    }
+    ++modCount;
+    // 超过load factor*current capacity，resize
+    if (++size &gt; threshold)
+        resize();
+    afterNodeInsertion(evict);
+    return null;
+}
+
+
+获取方法：get(Object key)
+
+执行流程如下：
+
+首先比对首节点，如果首节点的 hash 值和 key 的 hash 值相同，并且首节点的键对象和 key 相同（地址相同或 equals 相等），则返回该节点；
+如果首节点比对不相同、那么看看是否存在下一个节点，如果存在的话，可以继续比对，如果不存在就意味着 key 没有匹配的键值对。
+
+源码及说明
+public V get(Object key) {
+Node&lt;K,V&gt; e;
+return (e = getNode(hash(key), key)) == null ? null : e.value;
+}
+/**
+* 该方法是 Map.get 方法的具体实现
+* 接收两个参数
+* @param hash key 的 hash 值，根据 hash 值在节点数组中寻址，该 hash 值是通过 hash(key) 得到的
+* @param key key 对象，当存在 hash 碰撞时，要逐个比对是否相等
+* @return 查找到则返回键值对节点对象，否则返回 null
+*/
+final Node&lt;K,V&gt; getNode(int hash, Object key) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k; // 声明节点数组对象、链表的第一个节点对象、循环遍历时的当前节点对象、数组长度、节点的键对象
+    // 节点数组赋值、数组长度赋值、通过位运算得到求模结果确定链表的首节点
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (first = tab[(n - 1) &amp; hash]) != null) {
+        if (first.hash == hash &amp;&amp; // 首先比对首节点，如果首节点的 hash 值和 key 的 hash 值相同，并且首节点的键对象和 key 相同（地址相同或 equals 相等），则返回该节点
+            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return first; // 返回首节点
+
+        // 如果首节点比对不相同、那么看看是否存在下一个节点，如果存在的话，可以继续比对，如果不存在就意味着 key 没有匹配的键值对    
+        if ((e = first.next) != null) {
+            // 如果存在下一个节点 e，那么先看看这个首节点是否是个树节点
+            if (first instanceof TreeNode)
+                // 如果是首节点是树节点，那么遍历树来查找
+                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key); 
+
+            // 如果首节点不是树节点，就说明还是个普通的链表，那么逐个遍历比对即可    
+            do {
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) // 比对时还是先看 hash 值是否相同、再看地址或 equals
+                    return e; // 如果当前节点e的键对象和key相同，那么返回 e
+            } while ((e = e.next) != null); // 看看是否还有下一个节点，如果有，继续下一轮比对，否则跳出循环
+        }
+    }
+    return null; // 在比对完了应该比对的树节点 或者全部的链表节点 都没能匹配到 key，那么就返回 nullMap 常见实现类有哪些
+Hashtable：Java 早期提供的一个哈希表实现，它是线程安全的，不支持 null 键和值，因为它的性能不如 ConcurrentHashMap，所以很少被推荐使用
+HashMap：最常用的哈希表实现，如果程序中没有多线程的需求，HashMap 是一个很好的选择，支持 null 键和值，如果在多线程中可用 ConcurrentHashMap 替代
+TreeMap：基于红黑树的一种提供顺序访问的 Map，自身实现了 key 的自然排序，也可以指定的 Comparator 来自定义排序
+LinkedHashMap：HashMap 的一个子类，保存了记录的插入顺序，可在遍历时保持与插入一样的顺序
+
+使用 HashMap 可能会遇到什么问题？如何避免HashMap 在并发场景中可能出现死循环的问题，这是因为 HashMap在扩容的时候会对链表进行一次倒序处理，假设两个线程同时执行扩容操作，第一个线程正在执行 B→A 的时候，第二个线程又执行了 A→B ，这个时候就会出现B→A→B 的问题，造成死循环解决的方法：升级 JDK 版本，在 JDK 8 之后扩容不会再进行倒序，因此死循环的问题得到了极大的改善，但这不是终极的方案，因为 HashMap本来就不是用在多线程版本下的，如果是多线程可使用 ConcurrentHashMap 替代 HashMap
+TreeMap 怎么实现根据 value 值倒序使用 Collections.sort(list, new Comparator&lt;Map.Entry&lt;String, String&gt;&gt;()自定义比较器实现，先把 TreeMap 转换为 ArrayList，在使用 Collections.sort() 根据 value进行倒序，完整的实现代码如下
+TreeMap&lt;String, String&gt; treeMap = new TreeMap();
+treeMap.put(&quot;dog&quot;, &quot;dog&quot;);
+treeMap.put(&quot;camel&quot;, &quot;camel&quot;);
+treeMap.put(&quot;cat&quot;, &quot;cat&quot;);
+treeMap.put(&quot;ant&quot;, &quot;ant&quot;);
+// map.entrySet() 转成 List
+List&lt;Map.Entry&lt;String, String&gt;&gt; list = new ArrayList&lt;&gt;(treeMap.entrySet());
+// 通过比较器实现比较排序
+Collections.sort(list, new Comparator&lt;Map.Entry&lt;String, String&gt;&gt;() {
+public int compare(Map.Entry&lt;String, String&gt; m1, Map.Entry&lt;String, String&gt; m2) {
+    return m2.getValue().compareTo(m1.getValue());
+}
+});
+// 打印结果
+for (Map.Entry&lt;String, String&gt; item : list) {
+System.out.println(item.getKey() + &quot;:&quot; + item.getValue());
+}HashMap 有哪些重要的参数？用途分别是什么
+容量（Capacity）：是指 HashMap 中桶的数量，默认的初始值为 16
+负载因子（LoadFactor）：也被称为装载因子，LoadFactor 是用来判定 HashMap 是否扩容的依据，默认值为 0.75f，装载因子的计算公式 = HashMap 存放的 KV 总和（size）/ Capacity
+
+HashMap 和 Hashtable 有什么区别
+Hashtable 使用了 synchronized 关键字来保障线程安全，而 HashMap 是非线程安全的
+HashMap 允许 K/V 都为 null，而 Hashtable K/V 都不允许 null
+HashMap 继承自 AbstractMap 类；而 Hashtable 继承自 Dictionary 类
+
+什么是哈希冲突当输入两个不同值，根据同一散列函数计算出相同的散列值的现象，我们就把它叫做碰撞（哈希碰撞）
+有哪些方法可以解决哈希冲突
+开放定址法：当关键字的哈希地址 p=H（key）出现冲突时，以 p 为基础，产生另一个哈希地址 p1，如果 p1 仍然冲突，再以 p 为基础，产生另一个哈希地址 p2，循环此过程直到找出一个不冲突的哈希地址，将相应元素存入其中
+再哈希法：这种方法是同时构造多个不同的哈希函数，当哈希地址 Hi=RH1（key）发生冲突时，再计算 Hi=RH2（key），循环此过程直到找到一个不冲突的哈希地址，这种方法唯一的缺点就是增加了计算时间
+链地址法：这种方法的基本思想是将所有哈希地址为 i 的元素构成一个称为同义词链的单链表，并将单链表的头指针存在哈希表的第 i 个单元中，因而查找、插入和删除主要在同义词链中进行。链地址法适用于经常进行插入和删除的情况
+建立公共溢出区：将哈希表分为基本表和溢出表两部分，凡是和基本表发生冲突的元素，一律填入溢出表
+
+HashMap 使用哪种方法来解决哈希冲突（哈希碰撞）HashMap 使用链表和红黑树来解决哈希冲突
+HashMap 的扩容为什么是 2^n这样做的目的是为了让散列更加均匀，从而减少哈希碰撞，以提供代码的执行效率
+哈希冲突的情况下 HashMap 如何取值如果有哈希冲突，HashMap 会循环链表中的每项 key 进行 equals 对比，返回对应的元素
+为什么重写 equals() 时一定要重写 hashCode()因为 Java 规定，如果两个对象 equals 比较相等（结果为 true），那么调用 hashCode 也必须相等。如果重写了 equals()但没有重写 hashCode()，就会与规定相违背，比如以下代码（故意注释掉 hashCode 方法）
+class Person {
+    private Integer age;
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Person)) {
+            return false;
+        } else {
+            return this.getAge().equals(((Person) o).getAge());
+        }
+    }
+//    public int hashCode() {
+//        return age.hashCode();
+//    }
+    public Person(int age) {
+        this.age = age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public Integer getAge() {
+        return age;
+    }
+    public static void main(String[] args) {
+        Person p1 = new Person(18);
+        Person p2 = new Person(18);
+        System.out.println(p1.equals(p2));
+        System.out.println(p1.hashCode() + &quot; : &quot; + p2.hashCode());
+    }
+}执行的结果：
+true
+21685669 : 2133927002如果重写 hashCode() 之后，执行的结果是
+true
+18 : 18HashMap 在 JDK 7 多线程中使用会导致什么问题HashMap 在 JDK 7 中会导致死循环的问题。因为在 JDK 7 中，多线程进行 HashMap 扩容时会导致链表的循环引用，这个时候使用get() 获取元素时就会导致死循环，造成 CPU 100% 的情况
+HashMap 在 JDK 7 和 JDK 8 中有哪些不同
+存储结构：JDK 7 使用的是数组 + 链表；JDK 8 使用的是数组 + 链表 + 红黑树
+存放数据的规则：JDK 7 无冲突时，存放数组；冲突时，存放链表；JDK 8 在没有冲突的情况下直接存放数组，有冲突时，当链表长度小于 8 时，存放在单链表结构中，当链表长度大于 8 时，树化并存放至红黑树的数据结构中
+插入数据方式：JDK 7 使用的是头插法（先将原位置的数据移到后 1 位，再插入数据到该位置）；JDK 8 使用的是尾插法（直接插入到链表尾部/红黑树）
+
+
+                        
+                    </p>
+                </a>
+            </div>
+
+            
+        </article>
+    
+
+    
+        <article class="box post post-item">
+            <div class="post-title"><a href="/2020/11/22/java-12/">集合</a></div>
+            <div class="post-meta">
+                
+                <i class="fa fa-calendar"></i> <time>2020-11-22</time>
+                <span class="dotted">|</span>
+                <i class="fa fa-user"></i> 
+            </div>
+
+            <div class="post-excerpt">
+                <a href="/2020/11/22/java-12/">
+                    <p>
+                        
+                            集合的继承关系图
+                        
+                    </p>
+                </a>
+            </div>
+
+            
+        </article>
+    
+
+    
+        <article class="box post post-item">
             <div class="post-title"><a href="/2020/11/22/java-11/">克隆和序列化</a></div>
             <div class="post-meta">
                 
@@ -280,61 +559,6 @@ i++ 先赋值再自加
         </article>
     
 
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/03/java-03/">字符串</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-11-03</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
-
-            <div class="post-excerpt">
-                <a href="/2020/11/03/java-03/">
-                    <p>
-                        
-                            String特性
-标准不可变类，对他的任何改动就是创建一个新的对象，再把引用指向该对象
-String对象在赋值后就在常量池中缓存，下次创建会先判断是否有缓存对象，有的话直接返回给创建者
-
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
-    
-        <article class="box post post-item">
-            <div class="post-title"><a href="/2020/11/02/java-02/">基本数据类型和包装类</a></div>
-            <div class="post-meta">
-                
-                <i class="fa fa-calendar"></i> <time>2020-11-02</time>
-                <span class="dotted">|</span>
-                <i class="fa fa-user"></i> 
-            </div>
-
-            <div class="post-excerpt">
-                <a href="/2020/11/02/java-02/">
-                    <p>
-                        
-                            基本数据类型
-整数型：byte，short，int，long
-布尔型：boolean
-浮点型：float，double
-字符型：char
-                        
-                    </p>
-                </a>
-            </div>
-
-            
-        </article>
-    
-
 
 
     <nav class="page-nav">
@@ -360,6 +584,14 @@ String对象在赋值后就在常量池中缓存，下次创建会先判断是�
     <ul class="item-box">
         
             
+                <li><a href="/2020/11/22/java-13/">Map</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-12/">集合</a></li>
+            
+        
+            
                 <li><a href="/2020/11/22/java-11/">克隆和序列化</a></li>
             
         
@@ -383,14 +615,6 @@ String对象在赋值后就在常量池中缓存，下次创建会先判断是�
                 <li><a href="/2020/11/03/java-06/">java时间类</a></li>
             
         
-            
-                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
-            
-        
-            
-                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
-            
-        
     </ul>
 </div>
 
@@ -400,7 +624,7 @@ String对象在赋值后就在常量池中缓存，下次创建会先判断是�
         
   <div class="box widget">
     <div class="title">Archives</div>
-    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
   </div>
 
     
