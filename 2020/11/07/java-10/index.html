@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="抽象类抽象类使用
+
+//Init AbstractAnimal.
+//AbstractAnimal Run.
+//AbstractAnimal
+//Animal Eat.
+abstract class AbstractAnimal {
+    public AbstractAnimal() {..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | 抽象类和接口</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">抽象类和接口</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-07</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><h4 id="抽象类使用"><a href="#抽象类使用" class="headerlink" title="抽象类使用"></a>抽象类使用</h4><a id="more"></a>
+
+<pre><code>//Init AbstractAnimal.
+//AbstractAnimal Run.
+//AbstractAnimal
+//Animal Eat.
+abstract class AbstractAnimal {
+    public AbstractAnimal() {
+        System.out.println(&quot;Init AbstractAnimal.&quot;);
+    }
+    static String name = &quot;AbstractAnimal&quot;;
+    public abstract void eat();
+    public void run() {
+        System.out.println(&quot;AbstractAnimal Run.&quot;);
+    }
+}
+class Animal extends AbstractAnimal {
+    public static void main(String[] args) {
+        AbstractAnimal animal = new Animal();
+        animal.run();
+        System.out.println(animal.name);
+        animal.eat();
+    }
+// 必须重写抽象父类方法
+    @Override
+    public void eat() {
+        System.out.println(&quot;Animal Eat.&quot;);
+    }
+}</code></pre><h4 id="抽象方法"><a href="#抽象方法" class="headerlink" title="抽象方法"></a>抽象方法</h4><p>使用 abstract 关键字修饰的方法叫做抽象方法，抽象方法仅有声明没有方法体</p>
+<pre><code>public abstract void m();</code></pre><h4 id="抽象类特性"><a href="#抽象类特性" class="headerlink" title="抽象类特性"></a>抽象类特性</h4><ul>
+<li>抽象类不能被初始化</li>
+<li>抽象类可以有构造方法</li>
+<li>抽象类的子类如果为普通类，则必须重写抽象类中的所有抽象方法</li>
+<li>抽象类中的方法可以是抽象方法或普通方法</li>
+<li>一个类中如果包含了一个抽象方法，这个类必须是抽象类</li>
+<li>子类中的抽象方法不能与父类中的抽象方法同名</li>
+<li>抽象方法不能为 private、static、final 等关键字修饰</li>
+<li>抽象类中可以包含普通成员变量，访问类型可以任意指定，也可以使用静态变量（static）</li>
+</ul>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>接口（interface）是抽象类的延伸，它允许一个类可以实现多个接口，弥补了抽象类不能多继承的缺陷，接口是对类的描述，使用 interface关键字来声明</p>
+<h4 id="Java-8-中接口的改动"><a href="#Java-8-中接口的改动" class="headerlink" title="Java 8 中接口的改动"></a>Java 8 中接口的改动</h4><ul>
+<li><p>接口中增加了 default 方法和 static 方法，可以有方法体</p>
+<pre><code>interface IAnimal {
+    static void printSex() {
+        System.out.println(&quot;Male Dog&quot;);
+    }
+    default void printAge() {
+        System.out.println(&quot;18&quot;);
+    }
+}
+class AnimalImpl implements IAnimal {
+    public static void main(String[] args) {
+        IAnimal.printSex();
+        IAnimal animal = new AnimalImpl();
+        animal.printAge();
+}
+}</code></pre></li>
+</ul>
+<p><strong>static 方法属于接口方法，可以直接使用；default 属于实例方法，必须先创建实例</strong></p>
+<ul>
+<li><p>接口中的静态变量会被继承</p>
+<pre><code>interface IAnimal {
+    static String animalName = &quot;Animal Name&quot;;
+    static void printSex() {
+        System.out.println(&quot;Male Dog&quot;);
+    }
+}
+class AnimalImpl implements IAnimal {
+    public static void main(String[] args) {
+        System.out.println(animalName);
+        IAnimal.printSex();
+    }
+}</code></pre></li>
+</ul>
+<p><strong>静态变量会被继承，静态方法不会被继承</strong></p>
+<ul>
+<li><p>新增函数式接口<br>函数式接口（Function Interface）是一个特殊的接口，使用 @FunctionInterface 注解声明，定义这种接口可以使用<br>Lambda 表达式直接调用</p>
+<pre><code>@FunctionalInterface
+interface IAnimal {
+    static String animalName = &quot;Animal Name&quot;;
+    static void printSex() {
+        System.out.println(&quot;Male Dog&quot;);
+    }
+    default void printAge() {
+        System.out.println(&quot;18&quot;);
+    }
+    void sayHi(String name);
+}
+class FunctionInterfaceTest {
+    public static void main(String[] args) {
+        IAnimal animal = name -&gt; System.out.println(name);
+        animal.sayHi(&quot;WangWang&quot;);
+    }
+}</code></pre></li>
+</ul>
+<p><strong>使用 @FunctionInterface 声明的函数式接口，抽象方法必须有且仅有一个，但可以包含其他非抽象方法</strong></p>
+<h4 id="抽象类中能不能包含方法体"><a href="#抽象类中能不能包含方法体" class="headerlink" title="抽象类中能不能包含方法体"></a>抽象类中能不能包含方法体</h4><p>抽象类中可以包含方法体。抽象类的构成也可以完全是包含方法体的普通方法，只不过这样并不是抽象类最优的使用方式</p>
+<h4 id="抽象类能不能被实例化？为什么"><a href="#抽象类能不能被实例化？为什么" class="headerlink" title="抽象类能不能被实例化？为什么"></a>抽象类能不能被实例化？为什么</h4><p>抽象类不能被实例化，因为抽象类和接口的设计就是用来规定子类行为特征的，就是让其他类来继承，是多态思想的一种设计体现，所以强制规定抽象类不能被实例化</p>
+<h4 id="抽象方法可以被-private-修饰吗？为什么"><a href="#抽象方法可以被-private-修饰吗？为什么" class="headerlink" title="抽象方法可以被 private 修饰吗？为什么"></a>抽象方法可以被 private 修饰吗？为什么</h4><p>抽象方法不能使用 private 修饰，因为抽象方法就是要子类继承重写的，如果设置 private则子类不能重写此抽象方法，这与抽象方法的设计理念相违背，所以不能被 private 修饰</p>
+<h4 id="接口能不能有方法体"><a href="#接口能不能有方法体" class="headerlink" title="接口能不能有方法体"></a>接口能不能有方法体</h4><p><strong>JDK8之前接口不能有方法体，JDK8之后新增了static方法和 default 方法，可以包含方法体</strong></p>
+<h4 id="抽象类和接口有什么区别"><a href="#抽象类和接口有什么区别" class="headerlink" title="抽象类和接口有什么区别"></a>抽象类和接口有什么区别</h4><ul>
+<li><strong>默认方法</strong></li>
+<li>抽象类可以有默认方法的实现</li>
+<li>JDK8之前接口不能有默认方法的实现，JDK8之后接口可以有默认方法的实现</li>
+<li><strong>继承方式</strong></li>
+<li>子类使用 extends 关键字来继承抽象类</li>
+<li>子类使用 implements 关键字类实现接口</li>
+<li><strong>构造器</strong></li>
+<li>抽象类可以有构造器</li>
+<li>接口不能有构造器</li>
+<li><strong>方法访问修饰符</strong></li>
+<li>抽象方法可以用 public / protected / default 等修饰符</li>
+<li>接口默认是 public 访问修饰符，并且不能使用其他修饰符</li>
+<li><strong>多继承</strong></li>
+<li>一个子类只能继承一个抽象类</li>
+<li>一个子类可以实现多个接口</li>
+</ul>
+<p><strong>抽象方法需要被子类重写，而静态方法是无法被重写的，因此抽象方法不能被静态（static）修饰；本地方法是由本地代码实现的方法，而抽象方法没有实现，所以抽象方法不能同时是本地方法；synchronized和方法的实现细节有关，而抽象方法不涉及实现细节，因此抽象方法不能被 synchronized 修饰</strong></p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/22/java-11/">克隆和序列化</a></li>
+            
+        
+            
+                <li><a href="/2020/11/07/java-10/">抽象类和接口</a></li>
+            
+        
+            
+                <li><a href="/2020/11/06/java-09/">内部类和枚举类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/04/java-08/">类与 Object 的应用</a></li>
+            
+        
+            
+                <li><a href="/2020/11/04/java-07/">数组和排序算法</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-06/">java时间类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-05/">Java异常处理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/03/java-04/">Java运算和流程控制</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
