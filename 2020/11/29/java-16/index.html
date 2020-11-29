@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="IO 介绍
+IO 是 Input/Output 的缩写，它是基于流模型实现的，比如操作文件时使用输入流和输出流来写入和读取文件等
+IO 分类
+字符流：Reader、Writer
+字节流：InputStream、OutputStream
+
+
+
+IO 使用Writer 使用(写入文件)// 给指定..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | java.io 包下的类</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">java.io 包下的类</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-29</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="IO-介绍"><a href="#IO-介绍" class="headerlink" title="IO 介绍"></a>IO 介绍</h2><a id="more"></a>
+<p>IO 是 Input/Output 的缩写，它是基于流模型实现的，比如操作文件时使用输入流和输出流来写入和读取文件等</p>
+<h2 id="IO-分类"><a href="#IO-分类" class="headerlink" title="IO 分类"></a>IO 分类</h2><ul>
+<li>字符流：Reader、Writer</li>
+<li>字节流：InputStream、OutputStream<img src="/2020/11/29/java-16/01.png" class="img-stand">
+
+</li>
+</ul>
+<h2 id="IO-使用"><a href="#IO-使用" class="headerlink" title="IO 使用"></a>IO 使用</h2><h4 id="Writer-使用-写入文件"><a href="#Writer-使用-写入文件" class="headerlink" title="Writer 使用(写入文件)"></a>Writer 使用(写入文件)</h4><pre><code>// 给指定目录下的文件追加信息
+Writer writer = new FileWriter(&quot;d:\\io.txt&quot;,true);
+writer.append(&quot;老王&quot;);
+writer.close();</code></pre><p>这几行简单的代码就可以实现把信息 “老王” 追加到 d:\io.txt 的文件下，参数二表示的是覆盖文字还是追加文字</p>
+<h4 id="Reader-使用-读取文件"><a href="#Reader-使用-读取文件" class="headerlink" title="Reader 使用(读取文件)"></a>Reader 使用(读取文件)</h4><pre><code>Reader reader = new FileReader(&quot;d:\\io.txt&quot;);
+BufferedReader bufferedReader = new BufferedReader(reader);
+String str = null;
+// 逐行读取信息
+while (null != (str = bufferedReader.readLine())) {
+    System.out.println(str);
+}
+bufferedReader.close();
+reader.close();</code></pre><h4 id="InputStream-使用-读取文件"><a href="#InputStream-使用-读取文件" class="headerlink" title="InputStream 使用(读取文件)"></a>InputStream 使用(读取文件)</h4><pre><code>InputStream inputStream = new FileInputStream(new File(&quot;d:\\io.txt&quot;));
+byte[] bytes = new byte[inputStream.available()];
+// 读取到 byte 数组
+inputStream.read(bytes);
+// 内容转换为字符串
+String content = new String(bytes, &quot;UTF-8&quot;);
+inputStream.close();</code></pre><h4 id="OutputStream-使用-写入文件"><a href="#OutputStream-使用-写入文件" class="headerlink" title="OutputStream 使用(写入文件)"></a>OutputStream 使用(写入文件)</h4><pre><code>OutputStream outputStream = new FileOutputStream(new File(&quot;d:\\io.txt&quot;),true);
+outputStream.write(&quot;老王&quot;.getBytes());
+outputStream.close();</code></pre><h2 id="NIO-介绍"><a href="#NIO-介绍" class="headerlink" title="NIO 介绍"></a>NIO 介绍</h2><p>java.nio，NIO（Non-Blocking IO）的出现解决了传统 IO，也就是我们经常说的 BIO（Blocking IO）同步阻塞的问题，<strong>NIO提供了 Channel、Selector 和Buffer 等概念，可以实现多路复用和同步非阻塞 IO 操作，从而大大提升了 IO 操作的性能</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">组合方式</th>
+<th align="left">性能分析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">同步阻塞</td>
+<td align="left">最常用的一种用法，使用也是最简单的，但是 I/O 性能一般很差，CPU 大部分在空闲状态</td>
+</tr>
+<tr>
+<td align="left">同步非阻塞</td>
+<td align="left">提升 I/O 性能的常用手段，就是将 I/O 的阻塞改成非阻塞方式，尤其在网络 I/O</td>
+</tr>
+</tbody></table>
+<p>是长连接，同时传输数据也不是很多的情况下，提升性能非常有效。<strong>这种方式通常能提升 I/O 性能，但是会增加 CPU 消耗，要考虑增加的 I/O性能能不能补偿 CPU 的消耗，也就是系统的瓶颈是在 I/O 还是在 CPU 上</strong></p>
+<h4 id="异步阻塞"><a href="#异步阻塞" class="headerlink" title="异步阻塞"></a>异步阻塞</h4><p>这种方式在分布式数据库中经常用到。例如，在往一个分布式数据库中写一条记录，通常会有一份是同步阻塞的记录，而还有两至三份是备份记录会写到其他机器上，这些备份记录通常都是采用异步阻塞的方式写I/O；异步阻塞对网络 I/O 能够提升效率，尤其像上面这种同时写多份相同数据的情况</p>
+<h4 id="异步非阻塞"><a href="#异步非阻塞" class="headerlink" title="异步非阻塞"></a>异步非阻塞</h4><p>这种组合方式用起来比较复杂，只有在一些非常复杂的分布式情况下使用，像集群之间的消息同步机制一般用这种 I/O组合方式。例如，Cassandra 的 Gossip通信机制就是采用异步非阻塞的方式。它适合同时要传多份相同的数据到集群中不同的机器，同时数据的传输量虽然不大，但是却非常频繁。这种网络 I/O用这个方式性能能达到最高</p>
+<p><strong>NIO 的具体使用</strong></p>
+<pre><code>int port = 6666;
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try (Selector selector = Selector.open();
+            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();) {
+            serverSocketChannel.bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
+            serverSocketChannel.configureBlocking(false);
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            while (true) {
+                selector.select(); // 阻塞等待就绪的 Channel
+                Set&lt;SelectionKey&gt; selectionKeys = selector.selectedKeys();
+                Iterator&lt;SelectionKey&gt; iterator = selectionKeys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    try (SocketChannel channel = ((ServerSocketChannel) key.channel()).accept()) {
+                        channel.write(Charset.defaultCharset().encode(&quot;老王，你好~&quot;));
+                    }
+                    iterator.remove();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}).start();
+
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        // Socket 客户端 1（接收信息并打印）
+        try (Socket cSocket = new Socket(InetAddress.getLocalHost(), port)) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
+            bufferedReader.lines().forEach(s -&gt; System.out.println(&quot;客户端 1 打印：&quot; + s));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}).start();
+
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        // Socket 客户端 2（接收信息并打印）
+        try (Socket cSocket = new Socket(InetAddress.getLocalHost(), port)) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
+            bufferedReader.lines().forEach(s -&gt; System.out.println(&quot;客户端 2 打印：&quot; + s));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}).start();</code></pre><p>以上代码创建了两个 Socket 客户端，用于收取和打印服务器端的消息。其中，服务器端通过 SelectionKey（选择键）获取到 SocketChannel（通道），而通道都注册到Selector（选择器）上，所有的客户端都可以获得对应的通道，而不是所有客户端都排队堵塞等待一个服务器连接，这样就实现多路复用的效果了。多路指的是多个通道（SocketChannel），而复用指的是一个服务器端连接重复被不同的客户端使用</p>
+<h2 id="AIO-介绍"><a href="#AIO-介绍" class="headerlink" title="AIO 介绍"></a>AIO 介绍</h2><p>AIO（Asynchronous IO）是 NIO 的升级，也叫 NIO2，实现了异步非堵塞 IO ，异步 IO 的操作基于事件和回调机制。  AIO 实现简单的 Socket 服务器，代码如下</p>
+<pre><code>int port = 8888;
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        AsynchronousChannelGroup group = null;
+        try {
+            group = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(4));
+            AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open(group).bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
+            server.accept(null, new CompletionHandler&lt;AsynchronousSocketChannel, AsynchronousServerSocketChannel&gt;() {
+                @Override
+                public void completed(AsynchronousSocketChannel result, AsynchronousServerSocketChannel attachment) {
+                    server.accept(null, this); // 接收下一个请求
+                    try {
+                        Future&lt;Integer&gt; f = result.write(Charset.defaultCharset().encode(&quot;Hi, 老王&quot;));
+                        f.get();
+                        System.out.println(&quot;服务端发送时间：&quot; + DateFormat.getDateTimeInstance().format(new Date()));
+                        result.close();
+                    } catch (InterruptedException | ExecutionException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void failed(Throwable exc, AsynchronousServerSocketChannel attachment) {
+                }
+            });
+            group.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}).start();
+
+// Socket 客户端
+AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
+Future&lt;Void&gt; future = client.connect(new InetSocketAddress(InetAddress.getLocalHost(), port));
+future.get();
+ByteBuffer buffer = ByteBuffer.allocate(100);
+client.read(buffer, null, new CompletionHandler&lt;Integer, Void&gt;() {
+    @Override
+    public void completed(Integer result, Void attachment) {
+        System.out.println(&quot;客户端打印：&quot; + new String(buffer.array()));
+    }
+
+    @Override
+    public void failed(Throwable exc, Void attachment) {
+        exc.printStackTrace();
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+});
+Thread.sleep(10 * 1000);</code></pre><h4 id="BIO、NIO、AIO-的区别是什么"><a href="#BIO、NIO、AIO-的区别是什么" class="headerlink" title="BIO、NIO、AIO 的区别是什么"></a>BIO、NIO、AIO 的区别是什么</h4><ul>
+<li>BIO 就是传统的 java.io 包，它是基于流模型实现的，交互的方式是同步、阻塞方式，也就是说在读入输入流或者输出流时，在读写动作完成之前，线程会一直阻塞在那里，它们之间的调用是可靠的线性顺序。它的优点就是代码比较简单、直观；缺点就是 IO 的效率和扩展性很低，容易成为应用性能瓶颈</li>
+<li>NIO 是 Java 1.4 引入的 java.nio 包，提供了 Channel、Selector、Buffer 等新的抽象，可以构建多路复用的、同步非阻塞 IO 程序，同时提供了更接近操作系统底层高性能的数据操作方式</li>
+<li>AIO 是 Java 1.7 之后引入的包，是 NIO 的升级版本，提供了异步非堵塞的 IO 操作方式，因此人们叫它 AIO（Asynchronous IO），异步 IO 是基于事件和回调机制实现的，也就是应用操作之后会直接返回，不会堵塞在那里，当后台处理完成，操作系统会通知相应的线程进行后续的操作</li>
+</ul>
+<p><strong>简单来说 BIO 就是传统 IO 包，产生的最早；NIO 是对 BIO 的改进提供了多路复用的同步非阻塞 IO，而 AIO 是 NIO的升级，提供了异步非阻塞 IO</strong></p>
+<h4 id="读取和写入文件最简洁的方式是什么"><a href="#读取和写入文件最简洁的方式是什么" class="headerlink" title="读取和写入文件最简洁的方式是什么"></a>读取和写入文件最简洁的方式是什么</h4><pre><code>// 读取文件
+byte[] bytes = Files.readAllBytes(Paths.get(&quot;d:\\io.txt&quot;));
+// 写入文件
+Files.write(Paths.get(&quot;d:\\io.txt&quot;), &quot;追加内容&quot;.getBytes(), StandardOpenOption.APPEND);</code></pre><h4 id="Files-常用方法都有哪些"><a href="#Files-常用方法都有哪些" class="headerlink" title="Files 常用方法都有哪些"></a>Files 常用方法都有哪些</h4><p>Files 是 Java 1.7 提供的，使得文件和文件夹的操作更加方便，它的常用方法有以下几个</p>
+<ul>
+<li>Files. exists()：检测文件路径是否存在</li>
+<li>Files. createFile()：创建文件</li>
+<li>Files. createDirectory()：创建文件夹</li>
+<li>Files. delete()：删除一个文件或目录</li>
+<li>Files. copy()：复制文件</li>
+<li>Files. move()：移动文件</li>
+<li>Files. size()：查看文件个数</li>
+<li>Files. read()：读取文件</li>
+<li>Files. write()：写入文件</li>
+</ul>
+<h4 id="不定项选择：为了提高读写性能，可以采用什么流"><a href="#不定项选择：为了提高读写性能，可以采用什么流" class="headerlink" title="不定项选择：为了提高读写性能，可以采用什么流"></a>不定项选择：为了提高读写性能，可以采用什么流</h4><p><strong>BufferedInputStream是一种带缓存区的输入流，在读取字节数据时可以从底层流中一次性读取多个字节到缓存区，而不必每次都调用系统底层；同理，BufferedOutputStream也是一种带缓冲区的输出流，通过缓冲区输出流，应用程序先把字节写入缓冲区，缓存区满后再调用操作系统底层，从而提高系统性能，而不必每次都去调用系统底层方法</strong></p>
+<h4 id="FileInputStream-和-BufferedInputStream-的区别是什么"><a href="#FileInputStream-和-BufferedInputStream-的区别是什么" class="headerlink" title="FileInputStream 和 BufferedInputStream 的区别是什么"></a>FileInputStream 和 BufferedInputStream 的区别是什么</h4><p>FileInputStream 在小文件读写时性能较好，而在大文件操作时使用 BufferedInputStream 更有优势</p>
+<pre><code>Files.createFile(Paths.get(&quot;c:\\pf.txt&quot;), PosixFilePermissions.asFileAttribute(
+    EnumSet.of(PosixFilePermission.OWNER_READ)));</code></pre><p>Files.createFile 参数传递的问题，PosixFilePermissions 不支持 Windows，因此在Windows 执行会报错 java.lang.UnsupportedOperationException: ‘posix:permissions’ not supported as initial attribute</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Java 1.4 之前只有 BIO（Blocking IO）可供使用，也就是 java.io 包下的那些类，它的缺点是同步阻塞式运行的。随后在 Java1.4 时，提供了 NIO（Non-Blocking IO）属于 BIO 的升级，提供了同步非阻塞的 IO 操作方式，它的重要组件是Selector（选择器）、Channel（通道）、Buffer（高效数据容器）实现了多路复用的高效 IO 操作。而 AIO（AsynchronousIO）也叫 NIO 2.0，属于 NIO 的补充和升级，提供了异步非阻塞的 IO 操作。</p>
+<p>还有另一个重要的知识点，是 Java 7.0 时新增的 Files 类，极大地提升了文件操作的便利性，比如读、写文件Files.write()、Files.readAllBytes() 等，都是非常简便和实用的方法</p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/29/java-17/">JDK 原生动态代理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/29/java-16/">java.io 包下的类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-15/">数据结构之队列</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-14/">泛型和迭代器</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-13/">Map</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-12/">集合</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-11/">克隆和序列化</a></li>
+            
+        
+            
+                <li><a href="/2020/11/07/java-10/">抽象类和接口</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

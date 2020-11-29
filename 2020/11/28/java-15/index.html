@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="队列（Queue）：与栈相对的一种数据结构，集合（Collection）的一个子类。队列允许在一端进行插入操作，而在另一端进行删除操作的线性表，栈的特点是后进先出，而队列的特点是先进先出。队列的用处很大，比如实现消息队列，Queue 类关系图，如下图所示：
+队列（Queue）Queue 分类
+..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | 数据结构之队列</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">数据结构之队列</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-28</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <p>队列（Queue）<a id="more"></a>：与栈相对的一种数据结构，集合（Collection）的一个子类。队列允许在一端进行插入操作，而在另一端进行删除操作的线性表，栈的特点是后进先出，而队列的特点是先进先出。队列的用处很大，比如实现消息队列，Queue 类关系图，如下图所示：<br><img src="/2020/11/28/java-15/01.png" class="img-stand"></p>
+<h2 id="队列（Queue）"><a href="#队列（Queue）" class="headerlink" title="队列（Queue）"></a>队列（Queue）</h2><h4 id="Queue-分类"><a href="#Queue-分类" class="headerlink" title="Queue 分类"></a>Queue 分类</h4><ul>
+<li>双端队列：双端队列（Deque）是 Queue 的子类也是 Queue 的补充类，头部和尾部都支持元素插入和获取。</li>
+<li>阻塞队列：阻塞队列指的是在元素操作时（添加或删除），如果没有成功，会阻塞等待执行。例如，当添加元素时，如果队列元素已满，队列会阻塞等待直到有空位时再插入</li>
+<li>非阻塞队列：非阻塞队列和阻塞队列相反，会直接返回操作的结果，而非阻塞等待。双端队列也属于非阻塞队列</li>
+</ul>
+<h4 id="Queue-方法说明"><a href="#Queue-方法说明" class="headerlink" title="Queue 方法说明"></a>Queue 方法说明</h4><ul>
+<li>add(E)：添加元素到队列尾部，成功返回 true，队列超出时抛出异常</li>
+<li>offer(E)：添加元素到队列尾部，成功返回 true，队列超出时返回 false</li>
+<li>remove()：删除元素，成功返回 true，失败返回 false</li>
+<li>poll()：获取并移除此队列的第一个元素，若队列为空，则返回 null</li>
+<li>peek()：获取但不移除此队列的第一个元素，若队列为空，则返回 null</li>
+<li>element()：获取但不移除此队列的第一个元素，若队列为空，则抛异常</li>
+</ul>
+<h4 id="Queue-使用实例"><a href="#Queue-使用实例" class="headerlink" title="Queue 使用实例"></a>Queue 使用实例</h4><pre><code>Queue&lt;String&gt; linkedList = new LinkedList&lt;&gt;();
+linkedList.add(&quot;Dog&quot;);
+linkedList.add(&quot;Camel&quot;);
+linkedList.add(&quot;Cat&quot;);
+while (!linkedList.isEmpty()) {
+    System.out.println(linkedList.poll());
+}</code></pre><h4 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h4><ul>
+<li><strong>BlockingQueue</strong></li>
+</ul>
+<p>BlockingQueue 在 java.util.concurrent 包下，其他阻塞类都实现自 BlockingQueue接口，BlockingQueue提供了线程安全的队列访问方式，当向队列中插入数据时，如果队列已满，线程则会阻塞等待队列中元素被取出后再插入；当从队列中取数据时，如果队列为空，则线程会阻塞等待队列中有新元素再获取</p>
+<p>BlockingQueue 核心方法</p>
+<ul>
+<li><p>add(E)：添加元素到队列尾部，成功返回 true，队列超出时抛出异常</p>
+</li>
+<li><p>offer(E)：添加元素到队列尾部，成功返回 true，队列超出时返回 false</p>
+</li>
+<li><p><strong>put(E)：将元素插入到队列的尾部，如果该队列已满，则一直阻塞</strong></p>
+</li>
+<li><p>remove(Object)：移除指定元素，成功返回 true，失败返回 false</p>
+</li>
+<li><p>poll()： 获取并移除队列的第一个元素，如果队列为空，则返回 null</p>
+</li>
+<li><p><strong>take()：获取并移除队列第一个元素，如果没有元素则一直阻塞</strong></p>
+</li>
+<li><p>peek()：获取但不移除队列的第一个元素，若队列为空，则返回 null</p>
+</li>
+<li><p><strong>LinkedBlockingQueue</strong></p>
+</li>
+</ul>
+<p>LinkedBlockingQueue 是一个由链表实现的有界阻塞队列，容量默认值为<br>Integer.MAX_VALUE，也可以自定义容量，建议指定容量大小，默认大小在添加速度大于删除速度情况下有造成内存溢出的风险，LinkedBlockingQueue<br>是先进先出的方式存储元素</p>
+<ul>
+<li><strong>ArrayBlockingQueue</strong></li>
+</ul>
+<p>ArrayBlockingQueue<br>是一个有边界的阻塞队列，它的内部实现是一个数组。它的容量是有限的，我们必须在其初始化的时候指定它的容量大小，容量大小一旦指定就不可改变。</p>
+<p><strong>ArrayBlockingQueue 也是先进先出的方式存储数据，ArrayBlockingQueue 内部的阻塞队列是通过重入锁 ReenterLock和 Condition 条件队列实现的，因此 ArrayBlockingQueue中的元素存在公平访问与非公平访问的区别，对于公平访问队列，被阻塞的线程可以按照阻塞的先后顺序访问队列，即先阻塞的线程先访问队列。而非公平队列，当队列可用时，阻塞的线程将进入争夺访问资源的竞争中，也就是说谁先抢到谁就执行，没有固定的先后顺序</strong></p>
+<pre><code>// 默认非公平阻塞队列
+ArrayBlockingQueue queue = new ArrayBlockingQueue(6);
+// 公平阻塞队列
+ArrayBlockingQueue queue2 = new ArrayBlockingQueue(6,true);
+
+// ArrayBlockingQueue 源码展示
+public ArrayBlockingQueue(int capacity) {
+    this(capacity, false);
+}
+public ArrayBlockingQueue(int capacity, boolean fair) {
+    if (capacity &lt;= 0)
+        throw new IllegalArgumentException();
+    this.items = new Object[capacity];
+    lock = new ReentrantLock(fair);
+    notEmpty = lock.newCondition();
+    notFull =  lock.newCondition();
+}</code></pre><ul>
+<li><strong>DelayQueue</strong></li>
+</ul>
+<p>DelayQueue 是一个支持延时获取元素的无界阻塞队列，队列中的元素必须实现 Delayed<br>接口，在创建元素时可以指定延迟时间，只有到达了延迟的时间之后，才能获取到该元素。</p>
+<p>实现了 Delayed 接口必须重写两个方法 ，getDelay(TimeUnit) 和 compareTo(Delayed)，如下代码所示</p>
+<pre><code>class DelayElement implements Delayed {
+        @Override
+        // 获取剩余时间
+        public long getDelay(TimeUnit unit) {
+            // do something
+        }
+        @Override
+        // 队列里元素的排序依据
+        public int compareTo(Delayed o) {
+            // do something
+        }
+    }</code></pre><p><strong>DelayQueue 使用的完整示例</strong></p>
+<pre><code>public class DelayTest {
+    public static void main(String[] args) throws InterruptedException {
+        DelayQueue delayQueue = new DelayQueue();
+        delayQueue.put(new DelayElement(1000));
+        delayQueue.put(new DelayElement(3000));
+        delayQueue.put(new DelayElement(5000));
+        System.out.println(&quot;开始时间：&quot; +  DateFormat.getDateTimeInstance().format(new Date()));
+        while (!delayQueue.isEmpty()){
+            System.out.println(delayQueue.take());
+        }
+        System.out.println(&quot;结束时间：&quot; +  DateFormat.getDateTimeInstance().format(new Date()));
+    }
+
+    static class DelayElement implements Delayed {
+        // 延迟截止时间（单面：毫秒）
+        long delayTime = System.currentTimeMillis();
+        public DelayElement(long delayTime) {
+            this.delayTime = (this.delayTime + delayTime);
+        }
+        @Override
+        // 获取剩余时间
+        public long getDelay(TimeUnit unit) {
+            return unit.convert(delayTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        }
+        @Override
+        // 队列里元素的排序依据
+        public int compareTo(Delayed o) {
+            if (this.getDelay(TimeUnit.MILLISECONDS) &gt; o.getDelay(TimeUnit.MILLISECONDS)) {
+                return 1;
+            } else if (this.getDelay(TimeUnit.MILLISECONDS) &lt; o.getDelay(TimeUnit.MILLISECONDS)) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+        @Override
+        public String toString() {
+            return DateFormat.getDateTimeInstance().format(new Date(delayTime));
+        }
+    }
+}</code></pre><h4 id="非阻塞队列"><a href="#非阻塞队列" class="headerlink" title="非阻塞队列"></a>非阻塞队列</h4><p><strong>ConcurrentLinkedQueue</strong><br>是一个基于链接节点的无界线程安全队列，它采用先进先出的规则对节点进行排序，当我们添加一个元素的时候，它会添加到队列的尾部；当我们获取一个元素时，它会返回队列头部的元素。</p>
+<p>它的入队和出队操作均利用 CAS（Compare And Set）更新，这样允许多个线程并发执行，并且不会因为加锁而阻塞线程，使得并发性能更好</p>
+<pre><code>ConcurrentLinkedQueue concurrentLinkedQueue = new ConcurrentLinkedQueue();
+concurrentLinkedQueue.add(&quot;Dog&quot;);
+concurrentLinkedQueue.add(&quot;Cat&quot;);
+while (!concurrentLinkedQueue.isEmpty()) {
+    System.out.println(concurrentLinkedQueue.poll());
+}</code></pre><h4 id="优先级队列"><a href="#优先级队列" class="headerlink" title="优先级队列"></a>优先级队列</h4><p><strong>PriorityQueue</strong> 一个基于优先级堆的无界优先级队列。优先级队列的元素按照其自然顺序进行排序，或者根据构造队列时提供的 Comparator进行排序，具体取决于所使用的构造方法。优先级队列不允许使用 null 元素</p>
+<pre><code>Queue&lt;Integer&gt; priorityQueue = new PriorityQueue(new Comparator&lt;Integer&gt;() {
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        // 非自然排序，数字倒序
+        return o2 - o1;
+    }
+});
+priorityQueue.add(3);
+priorityQueue.add(1);
+priorityQueue.add(2);
+while (!priorityQueue.isEmpty()) {
+    Integer i = priorityQueue.poll();
+    System.out.println(i);
+}</code></pre><h4 id="PriorityQueue-注意的点"><a href="#PriorityQueue-注意的点" class="headerlink" title="PriorityQueue 注意的点"></a>PriorityQueue 注意的点</h4><ul>
+<li>PriorityQueue 是非线程安全的，在多线程情况下可使用 PriorityBlockingQueue 类替代</li>
+<li>PriorityQueue 不允许插入 null 元素</li>
+</ul>
+<h4 id="ArrayBlockingQueue-和-LinkedBlockingQueue-的区别是什么"><a href="#ArrayBlockingQueue-和-LinkedBlockingQueue-的区别是什么" class="headerlink" title="ArrayBlockingQueue 和 LinkedBlockingQueue 的区别是什么"></a>ArrayBlockingQueue 和 LinkedBlockingQueue 的区别是什么</h4><ul>
+<li>ArrayBlockingQueue 使用时必须指定容量值，LinkedBlockingQueue 可以不用指定</li>
+<li>ArrayBlockingQueue 的最大容量值是使用时指定的，并且指定之后就不允许修改；而 LinkedBlockingQueue 最大的容量为 Integer.MAX_VALUE</li>
+<li>ArrayBlockingQueue 数据存储容器是采用数组存储的；而 LinkedBlockingQueue 采用的是 Node 节点存储的</li>
+</ul>
+<h4 id="Queue-和-Deque-有什么区别"><a href="#Queue-和-Deque-有什么区别" class="headerlink" title="Queue 和 Deque 有什么区别"></a>Queue 和 Deque 有什么区别</h4><p><strong>Queue 属于一般队列，Deque 属于双端队列。一般队列是先进先出，也就是只有先进的才能先出；而双端队列则是两端都能插入和删除元素</strong></p>
+<h4 id="LinkedList-属于一般队列还是双端队列"><a href="#LinkedList-属于一般队列还是双端队列" class="headerlink" title="LinkedList 属于一般队列还是双端队列"></a>LinkedList 属于一般队列还是双端队列</h4><p>LinkedList 实现了 Deque 属于双端队列，因此拥有 addFirst(E)、addLast(E)、getFirst()、getLast()<br>等方法</p>
+<h4 id="Java-中常见的阻塞队列有哪些"><a href="#Java-中常见的阻塞队列有哪些" class="headerlink" title="Java 中常见的阻塞队列有哪些"></a>Java 中常见的阻塞队列有哪些</h4><ul>
+<li>ArrayBlockingQueue，由数组结构组成的有界阻塞队列</li>
+<li>PriorityBlockingQueue，支持优先级排序的无界阻塞队列</li>
+<li>SynchronousQueue，是一个不存储元素的阻塞队列，会直接将任务交给消费者，必须等队列中的添加元素被消费后才能继续添加新的元素</li>
+<li>LinkedBlockingQueue，由链表结构组成的阻塞队列</li>
+<li>DelayQueue，支持延时获取元素的无界阻塞队列</li>
+</ul>
+<h4 id="有界队列和无界队列有哪些区别"><a href="#有界队列和无界队列有哪些区别" class="headerlink" title="有界队列和无界队列有哪些区别"></a>有界队列和无界队列有哪些区别</h4><ul>
+<li>有界队列：有固定大小的队列叫做有界队列，比如：new ArrayBlockingQueue(6)，6 就是队列的大小</li>
+<li>无界队列：指的是没有设置固定大小的队列，这些队列的特点是可以直接入列，直到溢出。它们并不是真的无界，它们最大值通常为 Integer.MAX_VALUE，只是平常很少能用到这么大的容量（超过 Integer.MAX_VALUE），因此从使用者的体验上，就相当于 “无界”</li>
+</ul>
+<h4 id="如何手动实现一个延迟消息队列"><a href="#如何手动实现一个延迟消息队列" class="headerlink" title="如何手动实现一个延迟消息队列"></a>如何手动实现一个延迟消息队列</h4><p>说到延迟消息队列，我们应该可以第一时间想到要使用 DelayQueue延迟队列来解决这个问题。实现思路，消息队列分为生产者和消费者，生产者用于增加消息，消费者用于获取并消费消息，我们只需要生产者把消息放入到<br>DelayQueue 队列并设置延迟时间，消费者循环使用 take() 阻塞获取消息即可</p>
+<pre><code>public class CustomDelayQueue {
+    // 消息编号
+    static AtomicInteger MESSAGENO = new AtomicInteger(1);
+
+    public static void main(String[] args) throws InterruptedException {
+        DelayQueue&lt;DelayedElement&gt; delayQueue = new DelayQueue&lt;&gt;();
+        // 生产者1
+        producer(delayQueue, &quot;生产者1&quot;);
+        // 生产者2
+        producer(delayQueue, &quot;生产者2&quot;);
+        // 消费者
+        consumer(delayQueue);
+    }
+
+    //生产者
+    private static void producer(DelayQueue&lt;DelayedElement&gt; delayQueue, String name) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    // 产生 1~5 秒的随机数
+                    long time = 1000L * (new Random().nextInt(5) + 1);
+                    try {
+                        Thread.sleep(time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // 组合消息体
+                    String message = String.format(&quot;%s，消息编号：%s 发送时间：%s 延迟：%s 秒&quot;,
+                            name, MESSAGENO.getAndIncrement(), DateFormat.getDateTimeInstance().format(new Date()), time / 1000);
+                    // 生产消息
+                    delayQueue.put(new DelayedElement(message, time));
+                }
+            }
+        }).start();
+    }
+
+    //消费者
+    private static void consumer(DelayQueue&lt;DelayedElement&gt; delayQueue) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    DelayedElement element = null;
+                    try {
+                        // 消费消息
+                        element = delayQueue.take();
+                        System.out.println(element);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    // 延迟队列对象
+    static class DelayedElement implements Delayed {
+        // 过期时间（单位：毫秒）
+        long time = System.currentTimeMillis();
+        // 消息体
+        String message;
+        // 参数：delayTime 延迟时间（单位毫秒）
+        public DelayedElement(String message, long delayTime) {
+            this.time += delayTime;
+            this.message = message;
+        }
+        @Override
+        // 获取过期时间
+        public long getDelay(TimeUnit unit) {
+            return unit.convert(time - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        }
+        @Override
+        // 队列元素排序
+        public int compareTo(Delayed o) {
+            if (this.getDelay(TimeUnit.MILLISECONDS) &gt; o.getDelay(TimeUnit.MILLISECONDS))
+                return 1;
+            else if (this.getDelay(TimeUnit.MILLISECONDS) &lt; o.getDelay(TimeUnit.MILLISECONDS))
+                return -1;
+            else
+                return 0;
+        }
+        @Override
+        public String toString() {
+            // 打印消息
+            return message + &quot; |执行时间：&quot; + DateFormat.getDateTimeInstance().format(new Date());
+        }
+    }
+}</code></pre><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><strong>队列（Queue）按照是否阻塞可分为：阻塞队列 BlockingQueue 和 非阻塞队列。其中，双端队列 Deque也属于非阻塞队列，双端队列除了拥有队列的先进先出的方法之外，还拥有自己独有的方法，如addFirst()、addLast()、getFirst()、getLast() 等，支持首未插入和删除元素。队列中比较常用的两个队列还有PriorityQueue（优先级队列）和DelayQueue（延迟队列），可使用延迟队列来实现延迟消息队列</strong></p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/29/java-17/">JDK 原生动态代理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/29/java-16/">java.io 包下的类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-15/">数据结构之队列</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-14/">泛型和迭代器</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-13/">Map</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-12/">集合</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-11/">克隆和序列化</a></li>
+            
+        
+            
+                <li><a href="/2020/11/07/java-10/">抽象类和接口</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

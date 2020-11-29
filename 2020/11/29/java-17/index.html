@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+
+
+
+    <meta name="keywords" content=""/>
+
+
+
+    <meta name="description" content="反射
+反射机制是 Java语言提供的一种基础功能，赋予程序在运行时自省（introspect）的能力。简单来说就是通过反射，可以在运行期间获取、检测和调用对象的属性和方法
+反射的使用场景
+使用场景一 ：编程工具 IDEA 或 Eclipse 等，在写代码时会有代码（属性或方法名）提示，就是因为..."/>
+
+
+<meta name="Robots" content="all">
+
+
+    <title>Hexo | JDK 原生动态代理</title>
+
+
+<link rel="icon" href="/images/harry.ico">
+
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+    <div class="main-container">
+        <header class="header">
+    <div class="global-width">
+        <nav class="nav-box">
+            
+                <a class="nav-item" href="/"
+                
+                >Home</a>
+            
+                <a class="nav-item" href="/resume"
+                
+                >Resume</a>
+            
+                <a class="nav-item" href="/mood"
+                
+                   target="_blank"
+                
+                >Mood</a>
+            
+                <a class="nav-item" href="/amusement/tetris"
+                
+                   target="_blank"
+                
+                >Amusement</a>
+            
+                <a class="nav-item" href="/about"
+                
+                >About</a>
+            
+        </nav>
+    </div>
+</header>
+
+        <section class="content global-width">
+            <div class="main">
+                <article class="box post">
+    <div class="post-title align-center detail-title">JDK 原生动态代理</div>
+    <div class="post-meta align-center">
+        
+        <i class="fa fa-calendar"></i> <time>2020-11-29</time>
+        <span class="dotted">|</span>
+        <i class="fa fa-user"></i> 
+        
+    </div>
+
+    <div class="post-content">
+        <h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><a id="more"></a>
+<p>反射机制是 Java语言提供的一种基础功能，赋予程序在运行时自省（introspect）的能力。简单来说就是通过反射，可以在运行期间获取、检测和调用对象的属性和方法</p>
+<h4 id="反射的使用场景"><a href="#反射的使用场景" class="headerlink" title="反射的使用场景"></a>反射的使用场景</h4><ul>
+<li>使用场景一 ：编程工具 IDEA 或 Eclipse 等，在写代码时会有代码（属性或方法名）提示，就是因为使用了反射</li>
+<li>使用场景二 ：很多知名的框架，为了让程序更优雅更简洁，也会使用到反射</li>
+</ul>
+<p>例如， Spring 可以通过配置来加载不同的类，调用不同的方法，代码如下所示：</p>
+<pre><code>&lt;bean id=&quot;person&quot; class=&quot;com.spring.beans.Person&quot; init-method=&quot;initPerson&quot;&gt;
+&lt;/bean&gt;</code></pre><p>例如， MyBatis 在 Mapper 使用外部类的 SQL 构建查询时，代码如下所示：</p>
+<pre><code>@SelectProvider(type = PersonSql.class, method = &quot;getListSql&quot;)
+List&lt;Person&gt; getList();
+class PersonSql {
+    public String getListSql() {
+        String sql = new SQL() {{
+                SELECT("*");
+                FROM("person");
+            }}.toString();
+        return sql;
+    }
+}</code></pre><ul>
+<li><p>使用场景三 ：数据库连接池，也会使用反射调用不同类型的数据库驱动，代码如下所示：</p>
+<pre><code>String url = &quot;jdbc:mysql://127.0.0.1:3306/mydb&quot;;
+String username = &quot;root&quot;;
+String password = &quot;root&quot;;
+Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+Connection connection = DriverManager.getConnection(url, username, password);</code></pre></li>
+</ul>
+<h4 id="反射的基本使用"><a href="#反射的基本使用" class="headerlink" title="反射的基本使用"></a>反射的基本使用</h4><ul>
+<li>调用静态方法</li>
+<li>调用公共方法</li>
+<li>调用私有方法</li>
+</ul>
+<p>假设有一个实体类 MyReflect 包含了以上三种方法，代码如下：</p>
+<pre><code>package com.interview.chapter4;
+class MyReflect {
+    // 静态方法
+    public static void staticMd() {
+        System.out.println(&quot;Static Method&quot;);
+    }
+    // 公共方法
+    public void publicMd() {
+        System.out.println(&quot;Public Method&quot;);
+    }
+    // 私有方法
+    private void privateMd() {
+        System.out.println(&quot;Private Method&quot;);
+    }
+}</code></pre><p>下面分别来看，使用反射如何调用以上三种类型的方法。</p>
+<p><strong>反射调用静态方法</strong></p>
+<pre><code>Class myClass = Class.forName(&quot;com.interview.chapter4.MyReflect&quot;);
+Method method = myClass.getMethod(&quot;staticMd&quot;);
+method.invoke(myClass);</code></pre><p><strong>反射调用公共方法</strong></p>
+<pre><code>Class myClass = Class.forName(&quot;com.interview.chapter4.MyReflect&quot;);
+// 创建实例对象（相当于 new ）
+Object instance = myClass.newInstance();
+Method method2 = myClass.getMethod(&quot;publicMd&quot;);
+method2.invoke(instance);</code></pre><p><strong>反射调用私有方法</strong></p>
+<pre><code>Class myClass = Class.forName(&quot;com.interview.chapter4.MyReflect&quot;);
+// 创建实例对象（相当于 new ）
+Object object = myClass.newInstance();
+Method method3 = myClass.getDeclaredMethod(&quot;privateMd&quot;);
+method3.setAccessible(true);
+method3.invoke(object);</code></pre><h4 id="反射使用总结"><a href="#反射使用总结" class="headerlink" title="反射使用总结"></a>反射使用总结</h4><p><strong>反射获取调用类可以通过 Class.forName()，反射获取类实例要通过 newInstance()，相当于 new 一个新对象，反射获取方法要通过getMethod()，获取到类方法之后使用 invoke() 对类方法进行调用。如果是类方法为私有方法的话，则需要通过setAccessible(true) 来修改方法的访问限制，以上的这些操作就是反射的基本使用</strong></p>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>动态代理可以理解为，本来应该自己做的事情，却交给别人代为处理，这个过程就叫做动态代理</p>
+<h4 id="动态代理的使用场景"><a href="#动态代理的使用场景" class="headerlink" title="动态代理的使用场景"></a>动态代理的使用场景</h4><p>动态代理被广为人知的使用场景是 Spring 中的面向切面编程（AOP）。例如，依赖注入 @Autowired 和事务注解 @Transactional等，都是利用动态代理实现的<br>动态代理还可以封装一些 RPC 调用，也可以通过代理实现一个全局拦截器等</p>
+<h4 id="动态代理和反射的关系"><a href="#动态代理和反射的关系" class="headerlink" title="动态代理和反射的关系"></a>动态代理和反射的关系</h4><p><strong>JDK 原生提供的动态代理就是通过反射实现的，但动态代理的实现方式还可以是 ASM（一个短小精悍的字节码操作框架）、cglib（基于<br>ASM）等，并不局限于反射</strong></p>
+<ul>
+<li>JDK 原生动态代理</li>
+</ul>
+<p><strong>JDK Proxy只能代理实现接口的类（即使是 extends 继承类也是不可以代理的）</strong></p>
+<pre><code>interface Animal {
+    void eat();
+}
+class Dog implements Animal {
+    @Override
+    public void eat() {
+        System.out.println(&quot;The dog is eating&quot;);
+    }
+}
+class Cat implements Animal {
+    @Override
+    public void eat() {
+        System.out.println(&quot;The cat is eating&quot;);
+    }
+}
+
+// JDK 代理类
+class AnimalProxy implements InvocationHandler {
+    private Object target; // 代理对象
+    public Object getInstance(Object target) {
+        this.target = target;
+        // 取得代理对象
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
+    }
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println(&quot;调用前&quot;);
+        Object result = method.invoke(target, args); // 方法调用
+        System.out.println(&quot;调用后&quot;);
+        return result;
+    }
+}
+
+public static void main(String[] args) {
+    // JDK 动态代理调用
+    AnimalProxy proxy = new AnimalProxy();
+    Animal dogProxy = (Animal) proxy.getInstance(new Dog());
+    dogProxy.eat();
+}</code></pre><ul>
+<li>cglib 动态代理</li>
+</ul>
+<p>添加引用</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;cglib&lt;/groupId&gt;
+    &lt;artifactId&gt;cglib&lt;/artifactId&gt;
+    &lt;version&gt;3.2.12&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>具体调用</p>
+<pre><code>class Panda {
+    public void eat() {
+        System.out.println(&quot;The panda is eating&quot;);
+    }
+}
+class CglibProxy implements MethodInterceptor {
+    private Object target; // 代理对象
+    public Object getInstance(Object target) {
+        this.target = target;
+        Enhancer enhancer = new Enhancer();
+        // 设置父类为实例类
+        enhancer.setSuperclass(this.target.getClass());
+        // 回调方法
+        enhancer.setCallback(this);
+        // 创建代理对象
+        return enhancer.create();
+    }
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+        System.out.println(&quot;调用前&quot;);
+        Object result = methodProxy.invokeSuper(o, objects); // 执行方法调用
+        System.out.println(&quot;调用后&quot;);
+        return result;
+    }
+}
+public static void main(String[] args) {
+    // cglib 动态代理调用
+    CglibProxy proxy = new CglibProxy();
+    Panda panda = (Panda)proxy.getInstance(new Panda());
+    panda.eat();
+}</code></pre><p>由以上代码可以知道，cglib 的调用通过实现 MethodInterceptor 接口的 intercept 方法，调用 invokeSuper进行动态代理的。它可以直接对普通类进行动态代理，并不需要像 JDK 代理那样，需要通过接口来完成，值得一提的是<strong>Spring 的动态代理也是通过 cglib实现的</strong></p>
+<p><strong>cglib 底层是通过子类继承被代理对象的方式实现动态代理的，因此代理类不能是最终类（final），否则就会报错java.lang.IllegalArgumentException: Cannot subclass final class xxx</strong></p>
+<h4 id="cglib-可以代理任何类这句话对吗？为什么"><a href="#cglib-可以代理任何类这句话对吗？为什么" class="headerlink" title="cglib 可以代理任何类这句话对吗？为什么"></a>cglib 可以代理任何类这句话对吗？为什么</h4><p>这句话不完全对，因为<strong>cglib 只能代理可以有子类的普通类，对于像最终类（final），cglib 是不能实现动态代理的，因为 cglib的底层是通过继承代理类的子类来实现动态代理的，所以不能被继承类无法使用 cglib</strong></p>
+<h4 id="JDK-原生动态代理和-cglib-有什么区别"><a href="#JDK-原生动态代理和-cglib-有什么区别" class="headerlink" title="JDK 原生动态代理和 cglib 有什么区别"></a>JDK 原生动态代理和 cglib 有什么区别</h4><ul>
+<li>JDK 原生动态代理是基于接口实现的，不需要添加任何依赖，可以平滑的支持 JDK 版本的升级</li>
+<li>cglib 不需要实现接口，可以直接代理普通类，需要添加依赖包，性能更高</li>
+</ul>
+<h4 id="为什么-JDK-原生的动态代理必须要通过接口来完成"><a href="#为什么-JDK-原生的动态代理必须要通过接口来完成" class="headerlink" title="为什么 JDK 原生的动态代理必须要通过接口来完成"></a>为什么 JDK 原生的动态代理必须要通过接口来完成</h4><p>这是由于 JDK 原生设计的原因，来看动态代理的实现方法 newProxyInstance() 的源码</p>
+<pre><code>/**
+* ......
+* @param   loader the class loader to define the proxy class
+* @param   interfaces the list of interfaces for the proxy class to implement
+* ......
+*/ 
+@CallerSensitive
+public static Object newProxyInstance(ClassLoader loader,
+                                    Class&lt;?&gt;[] interfaces,
+                                    InvocationHandler h)
+    throws IllegalArgumentException
+{
+// 省略其他代码</code></pre><p>来看前两个参数的声明：</p>
+<ul>
+<li>loader：为类加载器，也就是 target.getClass().getClassLoader()</li>
+<li>interfaces：接口代理类的接口实现列表</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过本文可以知道 JDK 原生动态代理是使用反射实现的，但动态代理的实现方式不止有反射，还可以是 ASM（一个短小精悍的字节码操作框架）、cglib（基于ASM）等。其中 JDK 原生的动态代理是通过接口实现的，而 cglib 是通过子类实现的，因此 cglib不能代理最终类（final）。而反射不但可以反射调用静态方法，还可以反射调用普通方法和私有方法，其中调用私有方法时要设置 setAccessible 为<br>true</p>
+
+    </div>
+</article>
+            </div>
+            <div class="aside">
+    
+        <div class="box widget">
+    <div class="introduction">
+        <p><img src="/images/harry.jpg" alt="head-sculpture" /></p>
+        <p class="name">
+            呵 呵 哒
+        </p>
+        <p class="slogan">铁打的肩膀，才能抗得起光芒</p>
+    </div>
+</div>
+    
+        
+<div class="box widget">
+    <div class="title">Recent</div>
+    <ul class="item-box">
+        
+            
+                <li><a href="/2020/11/29/java-17/">JDK 原生动态代理</a></li>
+            
+        
+            
+                <li><a href="/2020/11/29/java-16/">java.io 包下的类</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-15/">数据结构之队列</a></li>
+            
+        
+            
+                <li><a href="/2020/11/28/java-14/">泛型和迭代器</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-13/">Map</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-12/">集合</a></li>
+            
+        
+            
+                <li><a href="/2020/11/22/java-11/">克隆和序列化</a></li>
+            
+        
+            
+                <li><a href="/2020/11/07/java-10/">抽象类和接口</a></li>
+            
+        
+    </ul>
+</div>
+
+    
+        
+    
+        
+  <div class="box widget">
+    <div class="title">Archives</div>
+    <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">2020-11</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">2020-10</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">2020-06</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+    
+        
+    
+</div>
+        </section>
+        <footer class="footer">
+    <div class="global-width footer-box">
+        <div class="copyright">
+            <span>Copyright &copy; 2019</span>
+            <span class="dotted">|</span>
+            <span>Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a></span>
+            <span class="dotted">|</span>
+            <span>Theme by <a href="javascript:">Loren</a></span>
+            <span class="dotted">|</span>
+            <span><a href="http://www.beian.miit.gov.cn" target="_blank" rel="noopener">浙ICP备18016660号-1</a></span>
+        </div>
+    </div>
+</footer>
+    </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
